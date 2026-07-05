@@ -1,0 +1,1 @@
+ALTER TABLE caminhoes RENAME COLUMN plca TO placa;

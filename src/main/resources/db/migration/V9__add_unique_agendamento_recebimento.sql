@@ -1,0 +1,1 @@
+ALTER TABLE recebimentos ADD CONSTRAINT uq_recebimentos_agendamento_id UNIQUE (agendamento_id);
