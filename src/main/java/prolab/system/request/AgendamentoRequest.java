@@ -12,7 +12,7 @@ public record AgendamentoRequest(
         @NotNull
         Long clienteId,
 
-        @NotBlank
+        @NotBlank(message = "O tipo de resíduo não pode ser nulo ou vazio")
         String tipoResiduo,
 
         @NotNull

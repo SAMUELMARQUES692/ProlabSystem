@@ -5,10 +5,10 @@ import jakarta.validation.constraints.Pattern;
 
 public record ClienteRequest(
 
-        @NotBlank
+        @NotBlank(message = "Razão Social não pode ser nula ou vazia")
         String razaoSocial,
 
-        @NotBlank
+        @NotBlank(message = "CNPJ não pode ser nulo ou vazio")
         @Pattern(regexp = "\\d{14}", message = "CNPJ deve conter 14 dígitos numéricos")
         String cnpj,
 

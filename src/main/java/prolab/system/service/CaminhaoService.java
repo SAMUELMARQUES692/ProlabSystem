@@ -1,6 +1,7 @@
 package prolab.system.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import prolab.system.domain.Caminhao;
 import prolab.system.exception.CaminhaoNotFoundException;
@@ -19,6 +20,11 @@ public class CaminhaoService {
     private final CaminhaoMapper caminhaoMapper;
 
     public CaminhaoResponse cadastrar(CaminhaoRequest request) {
+
+        if (caminhaoRepository.findByPlaca(request.placa()).isPresent()) {
+            throw new DataIntegrityViolationException("Caminhão com a placa " + request.placa() + " já cadastrado");
+        }
+
         Caminhao newCaminhao = caminhaoMapper.toCaminhao(request);
         Caminhao save = caminhaoRepository.save(newCaminhao);
         return caminhaoMapper.toCaminhaoResponse(save);

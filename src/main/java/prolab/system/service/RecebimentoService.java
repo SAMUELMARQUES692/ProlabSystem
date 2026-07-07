@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import prolab.system.domain.Agendamento;
 import prolab.system.domain.Caminhao;
 import prolab.system.domain.Recebimento;
-import prolab.system.exception.AgendamentoDuplicadoException;
+import prolab.system.exception.RecebimentoDuplicadoException;
 import prolab.system.exception.AgendamentoNotFoundException;
 import prolab.system.exception.RecebimentoNotFoundException;
 import prolab.system.mapper.RecebimentoMapper;
@@ -36,7 +36,7 @@ public class RecebimentoService {
                 .orElseThrow(() -> new AgendamentoNotFoundException("Agendamento não encontrado"));
 
         if (recebimentoRepository.findByAgendamentoId(agendamento.getId()).isPresent()) {
-            throw new AgendamentoDuplicadoException("Recebimento já cadastrado para este agendamento");
+            throw new RecebimentoDuplicadoException ("Recebimento já cadastrado para este agendamento");
         }
 
         Caminhao caminhao = caminhaoRepository.findByPlaca(request.placaCaminhao())

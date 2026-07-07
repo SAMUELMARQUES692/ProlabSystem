@@ -10,12 +10,12 @@ public record RecebimentoRequest(
         @NotNull
         Long agendamentoId,
 
-        @NotBlank
+        @NotBlank(message = "Placa do caminhão não pode ser nula ou vazia")
         String placaCaminhao,
 
         String modeloCaminhao,
 
-        @NotBlank
+        @NotBlank(message = "Motorista do caminhão não pode ser nulo ou vazio")
         String motoristaCaminhao,
 
         @NotNull
