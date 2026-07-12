@@ -7,7 +7,8 @@ import prolab.system.domain.Cliente;
 import prolab.system.domain.DocumentoCliente;
 import prolab.system.domain.Recebimento;
 import prolab.system.exception.ClienteNotFoundException;
-import prolab.system.exception.RecebimentoDuplicadoException;
+import prolab.system.exception.DocumentoNotFoundException;
+import prolab.system.exception.RecebimentoNotFoundException;
 import prolab.system.mapper.DocumentoClienteMapper;
 import prolab.system.repository.ClienteRepository;
 import prolab.system.repository.DocumentoClienteRepository;
@@ -32,7 +33,7 @@ public class DocumentoClienteService {
         Recebimento recebimento = null;
         if (request.recebimentoId() != null) {
             recebimento = recebimentoRepository.findById(request.recebimentoId())
-                    .orElseThrow(() -> new RecebimentoDuplicadoException("Recebimento não encontrado com o ID: " + request.recebimentoId()));
+                    .orElseThrow(() -> new RecebimentoNotFoundException("Recebimento não encontrado com o ID: " + request.recebimentoId()));
         }
 
         DocumentoCliente documentoCliente = documentoClienteMapper.toDocumentoCliente(request);
@@ -42,6 +43,37 @@ public class DocumentoClienteService {
         DocumentoCliente salvo = documentoClienteRepository.save(documentoCliente);
         return documentoClienteMapper.toDocumentoClienteResponse(salvo);
 
+    }
+
+    @Transactional
+    public DocumentoClienteResponse atualizar(Long id, DocumentoClienteRequest request) {
+        DocumentoCliente documento = documentoClienteRepository.findById(id)
+                .orElseThrow(() -> new DocumentoNotFoundException("Documento não encontrado com o ID: " + id));
+
+        documentoClienteMapper.atualizarDocumentoCliente(request, documento);
+
+        if (request.recebimentoId() != null) {
+            Recebimento recebimento = recebimentoRepository.findById(request.recebimentoId())
+                    .orElseThrow(() -> new RecebimentoNotFoundException("Recebimento não encontrado com o ID: " + request.recebimentoId()));
+            documento.setRecebimento(recebimento);
+        }else {
+            documento.setRecebimento(null);
+        }
+
+        DocumentoCliente salvo = documentoClienteRepository.save(documento);
+        return documentoClienteMapper.toDocumentoClienteResponse(salvo);
+    }
+
+    public void deletar(Long id) {
+        documentoClienteRepository.findById(id)
+                .orElseThrow(() -> new DocumentoNotFoundException("Documento não encontrado com o ID: " + id));
+        documentoClienteRepository.deleteById(id);
+    }
+
+    public DocumentoClienteResponse buscarPorId(Long id) {
+        DocumentoCliente documento = documentoClienteRepository.findById(id)
+                .orElseThrow(() -> new DocumentoNotFoundException("Documento não encontrado com o ID: " + id));
+       return documentoClienteMapper.toDocumentoClienteResponse(documento);
     }
 
 }

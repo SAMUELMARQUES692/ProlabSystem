@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,6 +56,26 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DocumentoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> documentoNotFound(DocumentoNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "DOCUMENTO_NAO_ENCONTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> mensagemInvalida(HttpMessageNotReadableException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "REQUISICAO_INVALIDA",
+                "O corpo da requisição contém dados em formato inválido (verifique os valores enviados)",
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(RecebimentoDuplicadoException.class)

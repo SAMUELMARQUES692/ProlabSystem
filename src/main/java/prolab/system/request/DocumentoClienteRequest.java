@@ -1,6 +1,7 @@
 package prolab.system.request;
 
 import jakarta.validation.constraints.NotNull;
+import prolab.system.enums.TipoDocumento;
 
 import java.time.LocalDate;
 
@@ -12,7 +13,7 @@ public record DocumentoClienteRequest(
         Long recebimentoId,
 
         @NotNull
-        String tipo,
+        TipoDocumento tipo,
 
         String numero,
 
