@@ -68,6 +68,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(PosicaoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> posicaoNotFound(PosicaoNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "POSICAO_NAO_ENCONTRADA",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PosicaoJaCadastradaException.class)
+    public ResponseEntity<ErrorResponse> posicaoConflict(PosicaoJaCadastradaException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "POSICAO_JA_CADASTRADA",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> mensagemInvalida(HttpMessageNotReadableException exception) {
         ErrorResponse error = new ErrorResponse(
