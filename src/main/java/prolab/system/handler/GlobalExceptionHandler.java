@@ -78,6 +78,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(ResiduoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> residuoNotFound(ResiduoNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "RESIDUO_NAO_ENCONTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(PosicaoJaCadastradaException.class)
     public ResponseEntity<ErrorResponse> posicaoConflict(PosicaoJaCadastradaException exception) {
         ErrorResponse error = new ErrorResponse(
@@ -132,6 +142,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(TransicaoStatusInvalidaException.class)
+    public ResponseEntity<ErrorResponse> transicaoInvalida(TransicaoStatusInvalidaException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "TRANSICAO_STATUS_INVALIDA",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 
     // Fallback para erros inesperados
     @ExceptionHandler(Exception.class)
