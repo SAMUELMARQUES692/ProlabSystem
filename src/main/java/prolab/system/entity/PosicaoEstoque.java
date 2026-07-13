@@ -1,32 +1,33 @@
-package prolab.system.domain;
+package prolab.system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "caminhoes")
-@Getter @Setter
+@Table(name = "posicao_estoques")
+@Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 @ToString
-@AllArgsConstructor @NoArgsConstructor @Builder
-public class Caminhao {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class PosicaoEstoque {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10, nullable = false, unique = true)
-    private String placa;
+    @Column(name = "codigo", nullable = false, unique = true)
+    private String codigo;
 
-    @Column(length = 50)
-    private String modelo;
-
-    @Column(length = 50, nullable = false)
-    private String motorista;
+    @Column(name = "capacidade")
+    private BigDecimal capacidade;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

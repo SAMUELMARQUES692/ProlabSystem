@@ -3,10 +3,8 @@ package prolab.system.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import prolab.system.domain.Cliente;
-import prolab.system.domain.DocumentoCliente;
+import prolab.system.entity.Cliente;
 import prolab.system.request.ClienteRequest;
-import prolab.system.request.DocumentoClienteRequest;
 import prolab.system.response.ClienteResponse;
 
 @Mapper(componentModel = "spring")

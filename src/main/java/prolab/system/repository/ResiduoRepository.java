@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.Residuo;
+import prolab.system.entity.Residuo;
 import prolab.system.enums.StatusResiduo;
 
 import java.util.List;

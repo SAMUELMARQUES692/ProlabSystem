@@ -1,24 +1,24 @@
-package prolab.system.domain;
+package prolab.system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import prolab.system.enums.TipoDocumento;
+import prolab.system.enums.StatusAgendamento;
+import prolab.system.enums.TipoDeDestruicao;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "documentos_clientes")
+@Table(name = "agendamentos")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = {"cliente", "recebimento"})
+@ToString(exclude = "cliente")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DocumentoCliente {
+public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,25 +28,22 @@ public class DocumentoCliente {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recebimento_id")
-    private Recebimento recebimento;
+    @Column(name = "tipo_residuo", length = 100, nullable = false)
+    private String tipoResiduo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_destruicao")
+    private TipoDeDestruicao tipoDeDestruicao;
+
+    @Column(name = "quantidade_paletes")
+    private Integer quantidadePaletes;
+
+    @Column(name = "data_hora_prevista", nullable = false)
+    private LocalDateTime dataHoraPrevista;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoDocumento tipo;
-
-    @Column(length = 50)
-    private String numero;
-
-    @Column(name = "arquivo_url", length = 500)
-    private String arquivoUrl;
-
-    @Column(name = "data_emissao")
-    private LocalDate dataEmissao;
-
-    @Column(length = 500)
-    private String observacoes;
+    private StatusAgendamento status;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

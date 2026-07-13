@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.Caminhao;
+import prolab.system.entity.Caminhao;
 
 import java.util.Optional;
 

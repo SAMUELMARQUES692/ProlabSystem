@@ -3,7 +3,7 @@ package prolab.system.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import prolab.system.domain.PosicaoEstoque;
+import prolab.system.entity.PosicaoEstoque;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.PosicaoEstoqueResponse;
 

@@ -3,7 +3,7 @@ package prolab.system.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import prolab.system.domain.Agendamento;
+import prolab.system.entity.Agendamento;
 import prolab.system.request.AgendamentoRequest;
 import prolab.system.response.AgendamentoResponse;
 

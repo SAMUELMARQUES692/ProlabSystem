@@ -3,7 +3,7 @@ package prolab.system.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import prolab.system.domain.Caminhao;
+import prolab.system.entity.Caminhao;
 import prolab.system.request.CaminhaoRequest;
 import prolab.system.response.CaminhaoResponse;
 

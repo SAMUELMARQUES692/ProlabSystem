@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import prolab.system.domain.Cliente;
+import prolab.system.entity.Cliente;
 import prolab.system.exception.ClienteNotFoundException;
 import prolab.system.mapper.ClienteMapper;
 import prolab.system.repository.ClienteRepository;
-import prolab.system.repository.ControleSequencialRepository;
 import prolab.system.request.ClienteRequest;
 import prolab.system.response.ClienteResponse;
-
-import java.time.Year;
 
 @Service
 @RequiredArgsConstructor

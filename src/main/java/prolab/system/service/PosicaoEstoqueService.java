@@ -2,7 +2,7 @@ package prolab.system.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import prolab.system.domain.PosicaoEstoque;
+import prolab.system.entity.PosicaoEstoque;
 import prolab.system.exception.PosicaoJaCadastradaException;
 import prolab.system.exception.PosicaoNotFoundException;
 import prolab.system.mapper.PosicaoEstoqueMapper;

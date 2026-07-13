@@ -3,7 +3,7 @@ package prolab.system.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import prolab.system.domain.Caminhao;
+import prolab.system.entity.Caminhao;
 import prolab.system.exception.CaminhaoNotFoundException;
 import prolab.system.mapper.CaminhaoMapper;
 import prolab.system.repository.CaminhaoRepository;

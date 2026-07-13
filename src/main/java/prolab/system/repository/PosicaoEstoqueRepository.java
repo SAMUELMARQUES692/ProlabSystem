@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.PosicaoEstoque;
+import prolab.system.entity.PosicaoEstoque;
 
 import java.util.Optional;
 

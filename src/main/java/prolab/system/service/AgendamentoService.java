@@ -2,8 +2,8 @@ package prolab.system.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import prolab.system.domain.Agendamento;
-import prolab.system.domain.Cliente;
+import prolab.system.entity.Agendamento;
+import prolab.system.entity.Cliente;
 import prolab.system.enums.StatusAgendamento;
 import prolab.system.exception.AgendamentoNotFoundException;
 import prolab.system.exception.ClienteNotFoundException;

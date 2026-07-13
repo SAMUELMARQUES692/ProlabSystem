@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.Cliente;
+import prolab.system.entity.Cliente;
 
 import java.util.List;
 import java.util.Optional;

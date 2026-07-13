@@ -3,7 +3,7 @@ package prolab.system.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import prolab.system.domain.Residuo;
+import prolab.system.entity.Residuo;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
 

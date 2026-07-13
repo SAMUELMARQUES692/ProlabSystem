@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.DocumentoCliente;
+import prolab.system.entity.DocumentoCliente;
 
 import java.util.List;
 

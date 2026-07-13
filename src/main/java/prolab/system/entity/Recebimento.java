@@ -1,4 +1,4 @@
-package prolab.system.domain;
+package prolab.system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

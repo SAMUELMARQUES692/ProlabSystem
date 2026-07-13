@@ -3,7 +3,7 @@ package prolab.system.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import prolab.system.domain.Recebimento;
+import prolab.system.entity.Recebimento;
 import prolab.system.request.RecebimentoRequest;
 import prolab.system.response.RecebimentoResponse;
 

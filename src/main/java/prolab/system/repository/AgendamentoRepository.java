@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.Agendamento;
+import prolab.system.entity.Agendamento;
 import prolab.system.enums.StatusAgendamento;
 
 import java.util.List;

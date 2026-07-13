@@ -1,7 +1,7 @@
 package prolab.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import prolab.system.domain.Recebimento;
+import prolab.system.entity.Recebimento;
 
 import java.util.Optional;
 
