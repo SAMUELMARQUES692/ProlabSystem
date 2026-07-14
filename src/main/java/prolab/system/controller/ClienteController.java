@@ -9,6 +9,7 @@ import prolab.system.response.ClienteResponse;
 import prolab.system.service.ClienteService;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,5 +40,11 @@ public class ClienteController {
     public ResponseEntity<ClienteResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
+
+    @GetMapping
+    public ResponseEntity<List<ClienteResponse>> buscarTodos() {
+        return ResponseEntity.ok(clienteService.buscarTodos());
+    }
+
 
 }

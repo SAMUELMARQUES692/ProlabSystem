@@ -5,11 +5,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prolab.system.entity.Cliente;
+import prolab.system.exception.ClienteDuplicadoException;
 import prolab.system.exception.ClienteNotFoundException;
 import prolab.system.mapper.ClienteMapper;
 import prolab.system.repository.ClienteRepository;
 import prolab.system.request.ClienteRequest;
 import prolab.system.response.ClienteResponse;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class ClienteService {
     public ClienteResponse cadastrar(ClienteRequest request) {
 
         if (clienteRepository.findByCnpj(request.cnpj()).isPresent()) {
-            throw new DataIntegrityViolationException("CNPJ já cadastrado");
+            throw new ClienteDuplicadoException("CNPJ já cadastrado");
         }
 
         Cliente novoCliente = clienteMapper.toCliente(request);
@@ -41,10 +44,12 @@ public class ClienteService {
         return clienteMapper.toClienteResponse(salvo);
     }
 
+    @Transactional
     public void deletar(Long id) {
-        clienteRepository.findById(id)
+        Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente não encontrado com o ID " + id));
-        clienteRepository.deleteById(id);
+        cliente.setAtivo(false);
+        clienteRepository.save(cliente);
     }
 
     public ClienteResponse buscarPorId(Long id) {
@@ -53,5 +58,9 @@ public class ClienteService {
         return clienteMapper.toClienteResponse(cliente);
     }
 
-
+    public List<ClienteResponse> buscarTodos() {
+        return clienteRepository.findByAtivoTrue().stream()
+                .map(clienteMapper::toClienteResponse)
+                .toList();
+    }
 }

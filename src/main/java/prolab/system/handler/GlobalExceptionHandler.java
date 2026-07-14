@@ -98,6 +98,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    @ExceptionHandler(ClienteDuplicadoException.class)
+    public ResponseEntity<ErrorResponse> clienteConflict(ClienteDuplicadoException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "CLIENTE_JA_CADASTRADA",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> mensagemInvalida(HttpMessageNotReadableException exception) {
         ErrorResponse error = new ErrorResponse(
