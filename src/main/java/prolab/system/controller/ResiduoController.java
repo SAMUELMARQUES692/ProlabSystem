@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.ResiduoControllerDoc;
 import prolab.system.request.AtualizarStatusRequest;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
@@ -14,7 +15,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/residuos")
-public class ResiduoController {
+public class ResiduoController implements ResiduoControllerDoc {
 
     private final ResiduoService residuoService;
 
