@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.AgendamentoControllerDoc;
 import prolab.system.enums.StatusAgendamento;
 import prolab.system.request.AgendamentoRequest;
 import prolab.system.response.AgendamentoResponse;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/agendamentos")
-public class AgendamentoController {
+public class AgendamentoController implements AgendamentoControllerDoc {
 
     private final AgendamentoService agendamentoService;
 
