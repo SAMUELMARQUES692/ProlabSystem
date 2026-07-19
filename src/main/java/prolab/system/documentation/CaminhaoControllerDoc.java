@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import prolab.system.request.CaminhaoRequest;
-import prolab.system.response.AgendamentoResponse;
 import prolab.system.response.CaminhaoResponse;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public interface CaminhaoControllerDoc {
 
     @Operation(summary = "Busca todos veiculos", description = "Metodo responsavel por buscar todos os veiculos cadastrados no banco de dados",
             security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "200", description = "Veiulos encontrados com sucesso", content = @Content(schema = @Schema(implementation = AgendamentoResponse.class)))
+    @ApiResponse(responseCode = "200", description = "Veiulos encontrados com sucesso", content = @Content(schema = @Schema(implementation = CaminhaoResponse.class)))
     ResponseEntity<List<CaminhaoResponse>> buscarTodos();
 
 }

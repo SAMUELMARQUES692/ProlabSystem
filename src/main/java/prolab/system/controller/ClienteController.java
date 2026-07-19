@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.ClienteControllerDoc;
 import prolab.system.request.ClienteRequest;
 import prolab.system.response.ClienteResponse;
 import prolab.system.service.ClienteService;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/clientes")
-public class ClienteController {
+public class ClienteController implements ClienteControllerDoc {
 
     private final ClienteService clienteService;
 
