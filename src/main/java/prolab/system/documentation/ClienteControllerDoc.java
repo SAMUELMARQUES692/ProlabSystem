@@ -29,9 +29,9 @@ public interface ClienteControllerDoc {
     @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content())
     ResponseEntity<ClienteResponse> atualizar(@PathVariable Long id, @RequestBody @Valid ClienteRequest request);
 
-    @Operation(summary = "Deleta Cliente por ID", description = "Metodo responsavel por deletar clientes pelo ID",
+    @Operation(summary = "Desativar Cliente por ID", description = "Metodo responsavel por desativar clientes pelo ID",
             security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "204", description = "Cliente deletado com sucesso", content = @Content())
+    @ApiResponse(responseCode = "204", description = "Cliente desativado com sucesso", content = @Content())
     @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content())
     ResponseEntity<Void> deletar(@PathVariable Long id);
 
