@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.CaminhaoControllerDoc;
 import prolab.system.request.CaminhaoRequest;
 import prolab.system.response.CaminhaoResponse;
 import prolab.system.service.CaminhaoService;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/caminhoes")
-public class CaminhaoController {
+public class CaminhaoController implements CaminhaoControllerDoc {
 
     private final CaminhaoService caminhaoService;
 
