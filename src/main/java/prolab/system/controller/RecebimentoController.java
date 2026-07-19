@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.RecebimentoControllerDoc;
 import prolab.system.request.RecebimentoRequest;
 import prolab.system.response.RecebimentoResponse;
 import prolab.system.service.RecebimentoService;
@@ -13,7 +14,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/recebimentos")
-public class RecebimentoController {
+public class RecebimentoController implements RecebimentoControllerDoc {
 
     private final RecebimentoService recebimentoService;
 
