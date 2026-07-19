@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.DocumentoClienteControllerDoc;
 import prolab.system.request.DocumentoClienteRequest;
 import prolab.system.response.DocumentoClienteResponse;
 import prolab.system.service.DocumentoClienteService;
@@ -13,7 +14,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/documentos")
-public class DocumentoClienteController {
+public class DocumentoClienteController implements DocumentoClienteControllerDoc {
 
     private final DocumentoClienteService documentoClienteService;
 
