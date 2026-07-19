@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prolab.system.documentation.PosicaoEstoqueControllerDoc;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.PosicaoEstoqueResponse;
 import prolab.system.service.PosicaoEstoqueService;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/posicoes")
-public class PosicaoEstoqueController {
+public class PosicaoEstoqueController implements PosicaoEstoqueControllerDoc {
 
     private final PosicaoEstoqueService posicaoEstoqueService;
 

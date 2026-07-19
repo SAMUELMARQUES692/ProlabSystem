@@ -32,7 +32,7 @@ public interface ClienteControllerDoc {
     @Operation(summary = "Deleta Cliente por ID", description = "Metodo responsavel por deletar clientes pelo ID",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "204", description = "Cliente deletado com sucesso", content = @Content())
-    @ApiResponse(responseCode = "404", description = "Cliente não encontrada", content = @Content())
+    @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content())
     ResponseEntity<Void> deletar(@PathVariable Long id);
 
     @Operation(summary = "Busca os Clientes pelo ID", description = "Metodo responsavel por buscar clientes usando o ID",
