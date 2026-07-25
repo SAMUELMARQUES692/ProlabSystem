@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import prolab.system.entity.Agendamento;
 import prolab.system.entity.Cliente;
 import prolab.system.enums.StatusAgendamento;
+import prolab.system.enums.TipoDeDestruicao;
 import prolab.system.exception.AgendamentoNotFoundException;
 import prolab.system.exception.ClienteNotFoundException;
 import prolab.system.mapper.AgendamentoMapper;
@@ -59,6 +60,12 @@ public class AgendamentoService {
 
     public List<AgendamentoResponse> buscarPorStatus(StatusAgendamento status) {
         return agendamentoRepository.findByStatus(status).stream()
+                .map(agendamentoMapper::toAgendamentoResponse)
+                .toList();
+    }
+
+    public List<AgendamentoResponse> buscarPorTipoDeDestruicao(TipoDeDestruicao tipo) {
+        return agendamentoRepository.findByTipoDeDestruicao(tipo).stream()
                 .map(agendamentoMapper::toAgendamentoResponse)
                 .toList();
     }

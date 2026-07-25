@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import prolab.system.documentation.AgendamentoControllerDoc;
 import prolab.system.enums.StatusAgendamento;
+import prolab.system.enums.TipoDeDestruicao;
 import prolab.system.request.AgendamentoRequest;
 import prolab.system.response.AgendamentoResponse;
 import prolab.system.service.AgendamentoService;
@@ -46,6 +47,11 @@ public class AgendamentoController implements AgendamentoControllerDoc {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<AgendamentoResponse>> buscarPorStauts(@PathVariable StatusAgendamento status) {
         return ResponseEntity.ok(agendamentoService.buscarPorStatus(status));
+    }
+
+    @GetMapping("/buscar-tipo")
+    public ResponseEntity<List<AgendamentoResponse>> buscarPorTipoDeDestruicao(@RequestParam TipoDeDestruicao tipo) {
+        return ResponseEntity.ok(agendamentoService.buscarPorTipoDeDestruicao(tipo));
     }
 
 
