@@ -63,4 +63,12 @@ public class ClienteService {
                 .map(clienteMapper::toClienteResponse)
                 .toList();
     }
+
+    public ClienteResponse buscarPorRazaoSocial(String razaoSocial) {
+        Cliente cliente = clienteRepository.findByRazaoSocial(razaoSocial)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+        return clienteMapper.toClienteResponse(cliente);
+    }
+
+
 }

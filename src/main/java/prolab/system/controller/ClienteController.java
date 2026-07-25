@@ -47,5 +47,10 @@ public class ClienteController implements ClienteControllerDoc {
         return ResponseEntity.ok(clienteService.buscarTodos());
     }
 
+    @GetMapping("/buscar-razao")
+    public ResponseEntity<ClienteResponse> buscarPorRazaoSocial(@RequestParam String razaoSocial) {
+        return ResponseEntity.ok(clienteService.buscarPorRazaoSocial(razaoSocial));
+    }
+
 
 }
