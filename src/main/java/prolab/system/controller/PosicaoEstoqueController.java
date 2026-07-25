@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import prolab.system.documentation.PosicaoEstoqueControllerDoc;
+import prolab.system.enums.StatusPosicao;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.PosicaoEstoqueResponse;
 import prolab.system.response.ResiduoResponse;
@@ -45,6 +46,11 @@ public class PosicaoEstoqueController implements PosicaoEstoqueControllerDoc {
 
     @GetMapping("/{codigo}/residuos")
     public ResponseEntity<List<ResiduoResponse>> buscarPorCodigo(@PathVariable String codigo) {
-        return ResponseEntity.ok(posicaoEstoqueService.buscarPosicaoPorCodigo(codigo));
+        return ResponseEntity.ok(posicaoEstoqueService.buscarResiduoPorCodigo(codigo));
+    }
+
+    @GetMapping("/posicao-status")
+    public ResponseEntity<List<PosicaoEstoqueResponse>> buscarPosicaoPorStatus(@RequestParam StatusPosicao status) {
+        return ResponseEntity.ok(posicaoEstoqueService.buscarPosicaoPorStatus(status));
     }
 }

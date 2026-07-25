@@ -3,6 +3,7 @@ package prolab.system.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.PosicaoEstoque;
+import prolab.system.enums.StatusPosicao;
 import prolab.system.exception.PosicaoJaCadastradaException;
 import prolab.system.exception.PosicaoNotFoundException;
 import prolab.system.mapper.PosicaoEstoqueMapper;
@@ -30,6 +31,7 @@ public class PosicaoEstoqueService {
         }
 
             PosicaoEstoque novaPosicao = posicaoEstoqueMapper.toPosicaoEstoque(request);
+            novaPosicao.setStatus(StatusPosicao.DISPONIVEL);
             PosicaoEstoque salvar = posicaoEstoqueRepository.save(novaPosicao);
             return posicaoEstoqueMapper.toPosicaoEstoqueResponse(salvar);
     }
@@ -56,12 +58,18 @@ public class PosicaoEstoqueService {
                 .toList();
     }
 
-    public List<ResiduoResponse> buscarPosicaoPorCodigo(String codigo) {
+    public List<ResiduoResponse> buscarResiduoPorCodigo(String codigo) {
         posicaoEstoqueRepository.findByCodigo(codigo)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o codigo: " + codigo));
 
         return residuoRepository.findByPosicaoEstoqueCodigo(codigo).stream()
                 .map(residuoMapper::toResiduoResponse)
+                .toList();
+    }
+
+    public List<PosicaoEstoqueResponse> buscarPosicaoPorStatus(StatusPosicao status) {
+        return posicaoEstoqueRepository.findByStatus(status).stream()
+                .map(posicaoEstoqueMapper::toPosicaoEstoqueResponse)
                 .toList();
     }
 
