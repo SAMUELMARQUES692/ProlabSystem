@@ -19,6 +19,7 @@ import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -95,6 +96,28 @@ public class ResiduoService {
             throw new TransicaoStatusInvalidaException(
                     "Não é possível mudar de " + atual + " para " + novo);
         }
+    }
+
+    public List<ResiduoResponse> buscarPorTipoResiduo(String tipoResiduo) {
+        return residuoRepository.findByTipoResiduo(tipoResiduo).stream()
+                .map(residuoMapper::toResiduoResponse)
+                .toList();
+    }
+
+    public List<ResiduoResponse> buscarPorPosicao(Long posicaoId) {
+        posicaoEstoqueRepository.findById(posicaoId)
+                .orElseThrow(() -> new PosicaoNotFoundException("Posição Não encontrada com o ID: " + posicaoId));
+
+       return residuoRepository.findByPosicaoEstoqueId(posicaoId).stream()
+               .map(residuoMapper::toResiduoResponse)
+               .toList();
+
+    }
+
+    public List<ResiduoResponse> buscarPorStatusResiduo(StatusResiduo status) {
+        return residuoRepository.findByStatus(status).stream()
+                .map(residuoMapper::toResiduoResponse)
+                .toList();
     }
 
 

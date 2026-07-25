@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import prolab.system.documentation.ResiduoControllerDoc;
+import prolab.system.enums.StatusResiduo;
 import prolab.system.request.AtualizarStatusRequest;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
 import prolab.system.service.ResiduoService;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -46,5 +48,22 @@ public class ResiduoController implements ResiduoControllerDoc {
     public ResponseEntity<ResiduoResponse> atualizarStatus(@PathVariable Long id, @RequestBody @Valid AtualizarStatusRequest request) {
         return ResponseEntity.ok(residuoService.avancarStatus(id, request.novoStatus()));
     }
+
+    @GetMapping("{tipoResiduo}/tipo")
+    public ResponseEntity<List<ResiduoResponse>> buscarPorTipoResiduo(@PathVariable String tipoResiduo) {
+        return ResponseEntity.ok(residuoService.buscarPorTipoResiduo(tipoResiduo));
+    }
+
+    @GetMapping("{posicaoId}/posicao")
+    public ResponseEntity<List<ResiduoResponse>> buscarResiduoPorPosicao(@PathVariable Long posicaoId) {
+        return ResponseEntity.ok(residuoService.buscarPorPosicao(posicaoId));
+    }
+
+    @GetMapping("/status-residuo")
+    public ResponseEntity<List<ResiduoResponse>> buscarPorStatusResiduo(@RequestParam StatusResiduo status) {
+        return ResponseEntity.ok(residuoService.buscarPorStatusResiduo(status));
+    }
+
+
 
 }
