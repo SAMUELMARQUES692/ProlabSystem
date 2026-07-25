@@ -2,6 +2,7 @@ package prolab.system.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import prolab.system.entity.PosicaoEstoque;
 import prolab.system.enums.StatusPosicao;
 import prolab.system.exception.PosicaoJaCadastradaException;
@@ -25,13 +26,14 @@ public class PosicaoEstoqueService {
     private final ResiduoRepository residuoRepository;
     private final ResiduoMapper residuoMapper;
 
+    @Transactional
     public PosicaoEstoqueResponse cadastrar(PosicaoEstoqueRequest request) {
         if (posicaoEstoqueRepository.findByCodigo(request.codigo()).isPresent()) {
             throw new PosicaoJaCadastradaException("Posição já existe no banco de dados");
         }
 
             PosicaoEstoque novaPosicao = posicaoEstoqueMapper.toPosicaoEstoque(request);
-            novaPosicao.setStatus(StatusPosicao.DISPONIVEL);
+            novaPosicao.setStatus(request.status());
             PosicaoEstoque salvar = posicaoEstoqueRepository.save(novaPosicao);
             return posicaoEstoqueMapper.toPosicaoEstoqueResponse(salvar);
     }
