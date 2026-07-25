@@ -12,4 +12,5 @@ public interface ResiduoRepository extends JpaRepository<Residuo, Long> {
     List<Residuo> findByStatus(StatusResiduo status);
     List<Residuo> findByTipoResiduo(String tipoResiduo);
     List<Residuo> findByPosicaoEstoqueId(Long posicaoId);
+    List<Residuo> findByPosicaoEstoqueCodigo(String codigo);
 }

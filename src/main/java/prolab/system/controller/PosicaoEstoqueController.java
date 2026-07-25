@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import prolab.system.documentation.PosicaoEstoqueControllerDoc;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.PosicaoEstoqueResponse;
+import prolab.system.response.ResiduoResponse;
 import prolab.system.service.PosicaoEstoqueService;
 
 import java.net.URI;
@@ -40,5 +41,10 @@ public class PosicaoEstoqueController implements PosicaoEstoqueControllerDoc {
     @GetMapping
     public ResponseEntity<List<PosicaoEstoqueResponse>> buscarTodas() {
         return ResponseEntity.ok(posicaoEstoqueService.buscarTodas());
+    }
+
+    @GetMapping("/{codigo}/residuos")
+    public ResponseEntity<List<ResiduoResponse>> buscarPorCodigo(@PathVariable String codigo) {
+        return ResponseEntity.ok(posicaoEstoqueService.buscarPosicaoPorCodigo(codigo));
     }
 }

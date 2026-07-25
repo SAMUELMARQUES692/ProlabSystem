@@ -1,0 +1,1 @@
+ALTER TABLE posicao_estoques RENAME TO posicoes_estoque;

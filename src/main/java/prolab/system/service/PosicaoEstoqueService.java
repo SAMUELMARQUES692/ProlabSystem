@@ -6,9 +6,12 @@ import prolab.system.entity.PosicaoEstoque;
 import prolab.system.exception.PosicaoJaCadastradaException;
 import prolab.system.exception.PosicaoNotFoundException;
 import prolab.system.mapper.PosicaoEstoqueMapper;
+import prolab.system.mapper.ResiduoMapper;
 import prolab.system.repository.PosicaoEstoqueRepository;
+import prolab.system.repository.ResiduoRepository;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.PosicaoEstoqueResponse;
+import prolab.system.response.ResiduoResponse;
 
 import java.util.List;
 
@@ -18,6 +21,8 @@ public class PosicaoEstoqueService {
 
     private final PosicaoEstoqueRepository posicaoEstoqueRepository;
     private final PosicaoEstoqueMapper posicaoEstoqueMapper;
+    private final ResiduoRepository residuoRepository;
+    private final ResiduoMapper residuoMapper;
 
     public PosicaoEstoqueResponse cadastrar(PosicaoEstoqueRequest request) {
         if (posicaoEstoqueRepository.findByCodigo(request.codigo()).isPresent()) {
@@ -50,5 +55,16 @@ public class PosicaoEstoqueService {
                 .map(posicaoEstoqueMapper::toPosicaoEstoqueResponse)
                 .toList();
     }
+
+    public List<ResiduoResponse> buscarPosicaoPorCodigo(String codigo) {
+        posicaoEstoqueRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o codigo: " + codigo));
+
+        return residuoRepository.findByPosicaoEstoqueCodigo(codigo).stream()
+                .map(residuoMapper::toResiduoResponse)
+                .toList();
+    }
+
+
 
 }

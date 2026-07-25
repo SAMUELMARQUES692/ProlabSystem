@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import prolab.system.enums.StatusPosicao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "posicao_estoques")
+@Table(name = "posicoes_estoque")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
+@ToString(exclude = "residuos")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -29,6 +31,10 @@ public class PosicaoEstoque {
     @Column(name = "capacidade")
     private BigDecimal capacidade;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusPosicao status;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -36,4 +42,7 @@ public class PosicaoEstoque {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "posicaoEstoque")
+    private List<Residuo> residuos;
 }
