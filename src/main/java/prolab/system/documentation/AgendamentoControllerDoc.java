@@ -10,7 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import prolab.system.enums.StatusAgendamento;
+import prolab.system.enums.TipoDeDestruicao;
 import prolab.system.request.AgendamentoRequest;
 import prolab.system.response.AgendamentoResponse;
 
@@ -47,6 +49,13 @@ public interface AgendamentoControllerDoc {
     @ApiResponse(responseCode = "200", description = "Agendamento encontrado com sucesso", content = @Content(schema = @Schema(implementation = AgendamentoResponse.class)))
     @ApiResponse(responseCode = "404", description = "Agendamento não encontrado", content = @Content())
     ResponseEntity<List<AgendamentoResponse>> buscarPorStauts(@PathVariable StatusAgendamento status);
+
+
+    @Operation(summary = "Busca os Agendamentos pelo Tipo", description = "Metodo responsavel por buscar agendamentos usando o tipo",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Agendamento encontrado com sucesso", content = @Content(schema = @Schema(implementation = AgendamentoResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Agendamento não encontrado", content = @Content())
+    ResponseEntity<List<AgendamentoResponse>> buscarPorTipoDeDestruicao(@RequestParam TipoDeDestruicao tipo);
 
 
 }

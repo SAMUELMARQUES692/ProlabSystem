@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import prolab.system.request.ClienteRequest;
 import prolab.system.response.ClienteResponse;
 
@@ -45,5 +46,11 @@ public interface ClienteControllerDoc {
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso", content = @Content(schema = @Schema(implementation = ClienteResponse.class)))
     ResponseEntity<List<ClienteResponse>> buscarTodos();
+
+    @Operation(summary = "Busca os Clientes pelo Razão Social", description = "Metodo responsavel por buscar clientes usando a Razão Social",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso", content = @Content(schema = @Schema(implementation = ClienteResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content())
+    ResponseEntity<ClienteResponse> buscarPorRazaoSocial(@RequestParam String razaoSocial);
 
 }

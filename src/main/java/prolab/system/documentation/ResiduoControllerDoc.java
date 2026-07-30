@@ -10,9 +10,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import prolab.system.enums.StatusResiduo;
 import prolab.system.request.AtualizarStatusRequest;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
+
+import java.util.List;
 
 @Tag(name = "Resíduos", description = "Recurso responsavel pelo gerenciamento dos resíduos na API")
 public interface ResiduoControllerDoc {
@@ -45,5 +49,25 @@ public interface ResiduoControllerDoc {
     @ApiResponse(responseCode = "200", description = "Residuo avançado com sucesso", content = @Content(schema = @Schema(implementation = ResiduoResponse.class)))
     @ApiResponse(responseCode = "404", description = "Residuo não encontrado", content = @Content())
      ResponseEntity<ResiduoResponse> atualizarStatus(@PathVariable Long id, @RequestBody @Valid AtualizarStatusRequest request);
+
+
+    @Operation(summary = "Busca os Residuos pelo tipo", description = "Metodo responsavel por buscar residuos usando o tipo",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Residuo encontrado com sucesso", content = @Content(schema = @Schema(implementation = ResiduoResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Residuo não encontrado", content = @Content())
+    ResponseEntity<List<ResiduoResponse>> buscarPorTipoResiduo(@PathVariable String tipoResiduo);
+
+    @Operation(summary = "Busca os Residuos pela posição no estoque", description = "Metodo responsavel por buscar residuos usando a posicão alocada no estoque",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Residuo encontrado com sucesso", content = @Content(schema = @Schema(implementation = ResiduoResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Residuo não encontrado", content = @Content())
+    ResponseEntity<List<ResiduoResponse>> buscarResiduoPorPosicao(@PathVariable Long posicaoId);
+
+
+    @Operation(summary = "Busca os Residuos pelo status", description = "Metodo responsavel por buscar residuos usando o status do residuo",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Residuo encontrado com sucesso", content = @Content(schema = @Schema(implementation = ResiduoResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Residuo não encontrado", content = @Content())
+    ResponseEntity<List<ResiduoResponse>> buscarPorStatusResiduo(@RequestParam StatusResiduo status);
 
 }

@@ -10,8 +10,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import prolab.system.enums.StatusPosicao;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.PosicaoEstoqueResponse;
+import prolab.system.response.ResiduoResponse;
 
 import java.util.List;
 
@@ -39,4 +42,16 @@ public interface PosicaoEstoqueControllerDoc {
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "200", description = "Posições encontradas com sucesso", content = @Content(schema = @Schema(implementation = PosicaoEstoqueResponse.class)))
     ResponseEntity<List<PosicaoEstoqueResponse>> buscarTodas();
+
+    @Operation(summary = "Busca Residuos no estoque pelo codigo", description = "Metodo responsavel por buscar Residuos alocaldos em uma posição no estoque, usando o codigo da posicão",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Posição encontrada com sucesso", content = @Content())
+    @ApiResponse(responseCode = "404", description = "Posição não encontrada", content = @Content())
+    ResponseEntity<List<ResiduoResponse>> buscarPorCodigo(@PathVariable String codigo);
+
+    @Operation(summary = "Busca Residuos no estoque pelo status", description = "Metodo responsavel por buscar posições usando o status",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Posição encontrada com sucesso", content = @Content())
+    @ApiResponse(responseCode = "404", description = "Posição não encontrada", content = @Content())
+    ResponseEntity<List<PosicaoEstoqueResponse>> buscarPosicaoPorStatus(@RequestParam StatusPosicao status);
 }
