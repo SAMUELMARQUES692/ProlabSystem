@@ -7,10 +7,7 @@ import prolab.system.entity.PosicaoEstoque;
 import prolab.system.entity.Recebimento;
 import prolab.system.entity.Residuo;
 import prolab.system.enums.StatusResiduo;
-import prolab.system.exception.PosicaoNotFoundException;
-import prolab.system.exception.RecebimentoNotFoundException;
-import prolab.system.exception.ResiduoNotFoundException;
-import prolab.system.exception.TransicaoStatusInvalidaException;
+import prolab.system.exception.*;
 import prolab.system.mapper.ResiduoMapper;
 import prolab.system.repository.PosicaoEstoqueRepository;
 import prolab.system.repository.RecebimentoRepository;
@@ -18,6 +15,7 @@ import prolab.system.repository.ResiduoRepository;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,6 +35,16 @@ public class ResiduoService {
 
         PosicaoEstoque posicao = posicaoEstoqueRepository.findById(request.posicaoId())
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o ID: " + request.posicaoId()));
+
+        BigDecimal quantidadeAtual  = residuoRepository.somarQuantidadePorPosicao(request.posicaoId());
+        BigDecimal novaQuantidade = quantidadeAtual.add(request.quantidade());
+
+        if (posicao.getCapacidade().compareTo(novaQuantidade) < 0) {
+            throw new CapacidadeExcedidaException(
+                    "Capacidade da posição excedida. Capacidade: " + posicao.getCapacidade() +
+                            ", quantidade após adicionar: " + novaQuantidade
+            );
+        }
 
         Residuo residuo = residuoMapper.toResiduo(request);
         residuo.setRecebimento(recebimento);
@@ -118,6 +126,13 @@ public class ResiduoService {
         return residuoRepository.findByStatus(status).stream()
                 .map(residuoMapper::toResiduoResponse)
                 .toList();
+    }
+
+    public BigDecimal calculoTotalPesoPorPosicao(Long posicaoId) {
+        if (posicaoEstoqueRepository.findById(posicaoId).isPresent()) {
+            throw new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId);
+        }
+        return residuoRepository.somarQuantidadePorPosicao(posicaoId);
     }
 
 

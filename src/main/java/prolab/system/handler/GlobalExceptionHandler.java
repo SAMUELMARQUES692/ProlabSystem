@@ -138,6 +138,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    @ExceptionHandler(CapacidadeExcedidaException.class)
+    public ResponseEntity<ErrorResponse> capacidadeExcedida(CapacidadeExcedidaException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "CAPACIDADE_EXCEDIDA",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> validationError(MethodArgumentNotValidException exception) {
         String mensagens = exception.getBindingResult().getFieldErrors().stream()
