@@ -1,7 +1,9 @@
 package prolab.system.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
+@Builder
 public record CaminhaoRequest(
 
         @NotBlank(message = "Placa não pode ser nula ou vazia")
