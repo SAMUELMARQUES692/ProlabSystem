@@ -53,11 +53,34 @@ class CaminhaoMapperTest {
         assertEquals(caminhao.getModelo(), response.modelo());
         assertEquals(caminhao.getMotorista(), response.motorista());
         assertEquals(caminhao.getCreatedAt(), response.createdAt());
-
-
     }
 
     @Test
     void atualizarCaminhao() {
+
+        Caminhao caminhao = Caminhao.builder()
+                .id(1L)
+                .placa("asdfasd")
+                .modelo("Fiat Fiorino")
+                .motorista("Vinicius Rodrigues Marques")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+
+        CaminhaoRequest request = CaminhaoRequest.builder()
+                .placa("ABC-1234")
+                .modelo("Fiat Fiorino")
+                .motorista("Samuel Rodrigues Marques")
+                .build();
+
+        mapper.atualizarCaminhao(request, caminhao);
+
+        assertNotNull(request);
+
+        assertEquals(request.placa(), caminhao.getPlaca());
+        assertEquals(request.modelo(), caminhao.getModelo());
+        assertEquals(request.motorista(),caminhao.getMotorista());
+
+
     }
 }
