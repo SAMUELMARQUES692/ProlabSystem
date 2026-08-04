@@ -2,7 +2,9 @@ package prolab.system.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 
+@Builder
 public record ClienteRequest(
 
         @NotBlank(message = "Razão Social não pode ser nula ou vazia")
