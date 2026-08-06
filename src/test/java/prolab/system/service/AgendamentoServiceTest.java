@@ -80,7 +80,6 @@ class AgendamentoServiceTest {
         Mockito.verify(agendamentoRepository).save(Mockito.any()); // verifica se o metodo save do agendamentoRepository esta sendo chamado.
         Mockito.verify(agendamentoMapper).toAgendamentoResponse(Mockito.any()); // veriica se o AgendamentoResponse esta sendo retornado no metodo.
         Mockito.verify(agendamentoRepository).save(argumentCaptor.capture());
-        Agendamento salvo = argumentCaptor.getValue();
     }
 
     @Test
@@ -124,7 +123,6 @@ class AgendamentoServiceTest {
         Mockito.verify(agendamentoRepository).save(Mockito.any());
         Mockito.verify(agendamentoMapper).toAgendamentoResponse(Mockito.any());
         Mockito.verify(agendamentoRepository).save(argumentCaptor.capture());
-        Agendamento salvo = argumentCaptor.getValue();
     }
 
     @Test
