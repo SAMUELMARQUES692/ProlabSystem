@@ -129,7 +129,7 @@ public class ResiduoService {
     }
 
     public BigDecimal calculoTotalPesoPorPosicao(Long posicaoId) {
-        if (posicaoEstoqueRepository.findById(posicaoId).isPresent()) {
+        if (posicaoEstoqueRepository.findById(posicaoId).isEmpty()) {
             throw new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId);
         }
         return residuoRepository.somarQuantidadePorPosicao(posicaoId);
