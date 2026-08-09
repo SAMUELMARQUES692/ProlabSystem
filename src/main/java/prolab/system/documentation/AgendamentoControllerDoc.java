@@ -48,7 +48,7 @@ public interface AgendamentoControllerDoc {
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "200", description = "Agendamento encontrado com sucesso", content = @Content(schema = @Schema(implementation = AgendamentoResponse.class)))
     @ApiResponse(responseCode = "404", description = "Agendamento não encontrado", content = @Content())
-    ResponseEntity<List<AgendamentoResponse>> buscarPorStauts(@PathVariable StatusAgendamento status);
+    ResponseEntity<List<AgendamentoResponse>> buscarPorStatus(@PathVariable StatusAgendamento status);
 
 
     @Operation(summary = "Busca os Agendamentos pelo Tipo", description = "Metodo responsavel por buscar agendamentos usando o tipo",

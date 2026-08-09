@@ -45,7 +45,7 @@ public class AgendamentoController implements AgendamentoControllerDoc {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<AgendamentoResponse>> buscarPorStauts(@PathVariable StatusAgendamento status) {
+    public ResponseEntity<List<AgendamentoResponse>> buscarPorStatus(@PathVariable StatusAgendamento status) {
         return ResponseEntity.ok(agendamentoService.buscarPorStatus(status));
     }
 
