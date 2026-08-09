@@ -29,6 +29,7 @@ public class ResiduoService {
     private final PosicaoEstoqueRepository posicaoEstoqueRepository;
 
 
+    @Transactional
     public ResiduoResponse cadastrar(ResiduoRequest request) {
         Recebimento recebimento = recebimentoRepository.findById(request.recebimentoId())
                 .orElseThrow(() -> new RecebimentoNotFoundException("Recebimento não encontrado com ID: " + request.recebimentoId()));
@@ -55,6 +56,7 @@ public class ResiduoService {
         return residuoMapper.toResiduoResponse(salvo);
     }
 
+    @Transactional
     public ResiduoResponse atualizar(Long id, ResiduoRequest request) {
        Residuo residuo = residuoRepository.findById(id)
                .orElseThrow(() -> new ResiduoNotFoundException("Residuo não foi encontrado com o ID: " + id));

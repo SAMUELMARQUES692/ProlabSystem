@@ -38,6 +38,7 @@ public class PosicaoEstoqueService {
             return posicaoEstoqueMapper.toPosicaoEstoqueResponse(salvar);
     }
 
+    @Transactional
     public PosicaoEstoqueResponse atualizar(Long id, PosicaoEstoqueRequest request) {
         PosicaoEstoque posicao = posicaoEstoqueRepository.findById(id)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o ID: " + id));

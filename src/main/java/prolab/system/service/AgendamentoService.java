@@ -1,5 +1,6 @@
 package prolab.system.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.Agendamento;
@@ -24,6 +25,7 @@ public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final AgendamentoMapper agendamentoMapper;
 
+    @Transactional
     public AgendamentoResponse cadastrar(AgendamentoRequest request) {
         Cliente cliente = clienteRepository.findById(request.clienteId())
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente não encontrado"));
@@ -36,6 +38,7 @@ public class AgendamentoService {
         return agendamentoMapper.toAgendamentoResponse(salvo);
     }
 
+    @Transactional
     public AgendamentoResponse atualizar(Long id, AgendamentoRequest request) {
         Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new AgendamentoNotFoundException("Agendamento não encontrado"));

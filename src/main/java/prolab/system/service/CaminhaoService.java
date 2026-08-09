@@ -1,5 +1,6 @@
 package prolab.system.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class CaminhaoService {
     private final CaminhaoRepository caminhaoRepository;
     private final CaminhaoMapper caminhaoMapper;
 
+    @Transactional
     public CaminhaoResponse cadastrar(CaminhaoRequest request) {
 
         if (caminhaoRepository.findByPlaca(request.placa()).isPresent()) {
@@ -30,6 +32,7 @@ public class CaminhaoService {
         return caminhaoMapper.toCaminhaoResponse(save);
     }
 
+    @Transactional
     public CaminhaoResponse atualizar(Long id, CaminhaoRequest request) {
         Caminhao caminhao = caminhaoRepository.findById(id)
                 .orElseThrow(() -> new CaminhaoNotFoundException("Caminhão não encontrado"));

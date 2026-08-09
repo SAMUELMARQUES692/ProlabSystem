@@ -67,6 +67,7 @@ public class RecebimentoService {
         return caminhaoRepository.save(novoCaminhao);
     }
 
+    @Transactional
     public RecebimentoResponse atualizar(Long id, RecebimentoRequest request) {
         Recebimento recebimento = recebimentoRepository.findById(id)
                 .orElseThrow(() -> new RecebimentoNotFoundException("Recebimento não encontrado"));
