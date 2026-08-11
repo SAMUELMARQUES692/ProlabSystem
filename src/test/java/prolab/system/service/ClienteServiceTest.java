@@ -28,6 +28,9 @@ class ClienteServiceTest {
     @Mock
     ClienteMapper clienteMapper;
 
+    @Captor
+    ArgumentCaptor<Cliente> argumentCaptor;
+
     @Test
     void cadastrar() {
 
@@ -109,6 +112,9 @@ class ClienteServiceTest {
 
         Mockito.verify(clienteRepository).findById(cliente.getId());
         Mockito.verify(clienteRepository).save(Mockito.any());
+        Mockito.verify(clienteRepository).save(argumentCaptor.capture());
+
+        assertFalse(argumentCaptor.getValue().getAtivo());
     }
 
     @Test

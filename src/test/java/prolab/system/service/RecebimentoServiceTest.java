@@ -20,6 +20,9 @@ import prolab.system.request.RecebimentoRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @ExtendWith(MockitoExtension.class)
 class RecebimentoServiceTest {
 
@@ -90,6 +93,7 @@ class RecebimentoServiceTest {
         Mockito.when(caminhaoRepository.findByPlaca(caminhao.getPlaca())).thenReturn(Optional.empty());
         Mockito.when(recebimentoMapper.toRecebimento(request)).thenReturn(recebimento);
         Mockito.when(controleSequencialRepository.proximoNumero(Mockito.anyInt())).thenReturn(1);
+        Mockito.when(caminhaoRepository.save(Mockito.any())).thenReturn(caminhao);
 
         recebimentoService.cadastrar(request);
 
@@ -99,6 +103,11 @@ class RecebimentoServiceTest {
         Mockito.verify(recebimentoMapper).toRecebimento(request);
         Mockito.verify(recebimentoRepository).save(argumentCaptor.capture());
         Mockito.verify(recebimentoMapper).toRecebimentoResponse(Mockito.any());
+        Mockito.verify(caminhaoRepository).save(Mockito.any());
+
+        Recebimento salvo = argumentCaptor.getValue();
+        assertNotNull(salvo.getPrime());
+        assertEquals(agendamento, salvo.getAgendamento());
     }
 
     @Test

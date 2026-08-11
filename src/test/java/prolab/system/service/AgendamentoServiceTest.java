@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+
 @ExtendWith(MockitoExtension.class)
 class AgendamentoServiceTest {
 

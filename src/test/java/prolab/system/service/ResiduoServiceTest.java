@@ -7,6 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import prolab.system.entity.*;
 import prolab.system.enums.StatusPosicao;
 import prolab.system.enums.StatusResiduo;
+import prolab.system.exception.TransicaoStatusInvalidaException;
 import prolab.system.mapper.ResiduoMapper;
 import prolab.system.repository.PosicaoEstoqueRepository;
 import prolab.system.repository.RecebimentoRepository;
@@ -17,6 +18,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ResiduoServiceTest {
@@ -196,6 +200,22 @@ class ResiduoServiceTest {
     }
 
     @Test
+    void avancarStatus_transicaoInvalida_deveLancarExcecao() {
+        Residuo residuo = Residuo.builder()
+                .id(1L)
+                .status(StatusResiduo.ARMAZENADO)
+                .build();
+
+        Mockito.when(residuoRepository.findById(residuo.getId())).thenReturn(Optional.of(residuo));
+
+        assertThrows(TransicaoStatusInvalidaException.class, () ->
+                residuoService.avancarStatus(residuo.getId(), StatusResiduo.DESTRUIDO)
+        );
+
+        Mockito.verify(residuoRepository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
     void buscarPorTipoResiduo() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
@@ -281,11 +301,13 @@ class ResiduoServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.empty());
+        Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.of(posicaoEstoque));
+        Mockito.when(residuoRepository.somarQuantidadePorPosicao(posicaoEstoque.getId())).thenReturn(BigDecimal.valueOf(5));
 
-        residuoService.calculoTotalPesoPorPosicao(posicaoEstoque.getId());
+        BigDecimal total = residuoService.calculoTotalPesoPorPosicao(posicaoEstoque.getId());
 
         Mockito.verify(posicaoEstoqueRepository).findById(posicaoEstoque.getId());
         Mockito.verify(residuoRepository).somarQuantidadePorPosicao(posicaoEstoque.getId());
+        assertEquals(BigDecimal.valueOf(5), total);
     }
 }
