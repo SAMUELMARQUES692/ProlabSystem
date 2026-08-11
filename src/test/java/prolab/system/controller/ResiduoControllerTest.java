@@ -736,7 +736,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        mockMvc.perform(get("/api/residuos/status-residuo", residuo.getStatus())
+        mockMvc.perform(get("/api/residuos/status-residuo")
                         .param("status", "ARMAZENADO")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
                         .contentType(MediaType.APPLICATION_JSON)

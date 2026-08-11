@@ -247,7 +247,7 @@ class PosicaoEstoqueControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(get("/api/posicoes/posicao-status", posicaoEstoque.getStatus())
+        mockMvc.perform(get("/api/posicoes/posicao-status")
                         .param("status", "OCUPADA")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
                         .contentType(MediaType.APPLICATION_JSON)

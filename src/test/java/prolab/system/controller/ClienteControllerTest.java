@@ -112,7 +112,7 @@ class ClienteControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(put("/api/clientes/{id}", cliente.getId())
+        mockMvc.perform(get("/api/clientes/{id}", cliente.getId())
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(cliente)))

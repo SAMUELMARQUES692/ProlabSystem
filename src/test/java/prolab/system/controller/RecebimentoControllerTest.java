@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,7 +23,6 @@ import prolab.system.request.RecebimentoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,8 +46,32 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
     @Test
     void cadastrar() throws Exception{
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Caminhao caminhao = caminhaoRepository.save(
                 Caminhao.builder()
                         .placa("ABC1234")
@@ -59,9 +81,8 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
-
         RecebimentoRequest request = RecebimentoRequest.builder()
-                .agendamentoId(1L)
+                .agendamentoId(agendamento.getId())
                 .placaCaminhao(caminhao.getPlaca())
                 .modeloCaminhao(caminhao.getModelo())
                 .motoristaCaminhao(caminhao.getMotorista())
