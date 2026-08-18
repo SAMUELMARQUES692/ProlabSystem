@@ -12,7 +12,7 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*"); // depois trocamos pelo domínio real do frontend
+        configuration.addAllowedOriginPattern("https://front-end-prolab-system.vercel.app");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
 
