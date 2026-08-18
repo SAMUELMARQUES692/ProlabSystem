@@ -4,6 +4,19 @@ API de gestão de resíduos que registra e controla toda a entrada de resíduos 
 
 Este é o **serviço de domínio (core)** de um ecossistema de microsserviços. Ele expõe a regra de negócio e atua como **OAuth2 Resource Server**: não emite tokens, apenas valida os JWTs assinados pelo `auth-service` usando uma chave pública RSA.
 
+## 🔗 Deploy em produção
+
+- **Frontend:** https://front-end-prolab-system.vercel.app
+- **Auth Service:** https://auth-service-xa2p.onrender.com
+- **Prolab System:** https://prolabsystem.onrender.com
+- **Message Service:** https://message-service-mp5h.onrender.com (worker, sem endpoint público)
+
+> ⚠️ Os backends estão hospedados no plano gratuito do Render, que "dorme" após inatividade. A primeira requisição após um período sem uso pode levar de 30 a 60 segundos para responder (cold start).
+
+## CORS
+
+Em produção, o CORS está restrito ao domínio do frontend: `https://front-end-prolab-system.vercel.app`. Para desenvolvimento local, ajuste `CorsConfig.java` ou use `addAllowedOriginPattern("*")` temporariamente.
+
 ## Arquitetura
 
 O sistema é dividido em três serviços independentes:
