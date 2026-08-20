@@ -38,9 +38,6 @@ class ResiduoServiceTest {
     ResiduoRepository residuoRepository;
 
     @Mock
-    RecebimentoRepository recebimentoRepository;
-
-    @Mock
     PosicaoEstoqueRepository posicaoEstoqueRepository;
 
     @Mock
