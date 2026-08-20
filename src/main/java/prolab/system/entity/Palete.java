@@ -29,7 +29,7 @@ public class Palete {
     private String ticket;
 
     @Column(name = "numero_palete", nullable = false)
-    private String numeroPalete;
+    private Integer numeroPalete;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

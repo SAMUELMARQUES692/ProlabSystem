@@ -23,7 +23,5 @@ public record RecebimentoRequest(
         @NotNull
         LocalDateTime dataHoraRecebimento,  // renomeado
 
-        BigDecimal pesoConferido,
-
         String observacoes
 ) {}

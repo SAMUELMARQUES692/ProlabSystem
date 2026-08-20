@@ -42,11 +42,16 @@ public class Recebimento {
     @Column(length = 20, unique = true, nullable = false)
     private String prime;
 
+    @Column(name = "quantidade_paletes", nullable = false)
+    @Builder.Default
+    private Integer quantidadePaletes = 0;
+
     @Column(name = "data_hora_recebimento", nullable = false)
     private LocalDateTime dataHoraRecebimento;
 
-    @Column(name = "peso_conferido")
-    private BigDecimal pesoConferido;
+    @Column(name = "peso_conferido", nullable = false)
+    @Builder.Default
+    private BigDecimal pesoConferido = BigDecimal.ZERO;
 
     @Column(length = 500)
     private String observacoes;

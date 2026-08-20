@@ -2,7 +2,7 @@ CREATE TABLE paletes (
     id BIGSERIAL PRIMARY KEY,
     recebimento_id BIGINT NOT NULL REFERENCES recebimentos(id),
     ticket VARCHAR(255) NOT NULL UNIQUE,
-    numero_palete VARCHAR(255) NOT NULL,
+    numero_palete INTEGER NOT NULL,
     tipo VARCHAR(50) NOT NULL,
     peso NUMERIC(12,2) NOT NULL,
     estado_fisico VARCHAR(20) NOT NULL,

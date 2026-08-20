@@ -15,6 +15,8 @@ public interface RecebimentoMapper {
     @Mapping(target = "cliente", ignore = true)
     @Mapping(target = "caminhao", ignore = true)
     @Mapping(target = "prime", ignore = true)
+    @Mapping(target = "pesoConferido", ignore = true)
+    @Mapping(target = "quantidadePaletes", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Recebimento toRecebimento(RecebimentoRequest request);
@@ -29,6 +31,8 @@ public interface RecebimentoMapper {
     @Mapping(target = "cliente", ignore = true)
     @Mapping(target = "caminhao", ignore = true)
     @Mapping(target = "prime", ignore = true)
+    @Mapping(target = "pesoConferido", ignore = true)
+    @Mapping(target = "quantidadePaletes", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void atualizarRecebimento(RecebimentoRequest request, @MappingTarget Recebimento recebimento);
