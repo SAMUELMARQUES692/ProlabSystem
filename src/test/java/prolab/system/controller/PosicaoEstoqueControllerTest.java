@@ -9,10 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import prolab.system.configuration.BaseIntegrationTest;
 import prolab.system.entity.*;
-import prolab.system.enums.StatusAgendamento;
-import prolab.system.enums.StatusPosicao;
-import prolab.system.enums.StatusResiduo;
-import prolab.system.enums.TipoDeDestruicao;
+import prolab.system.enums.*;
 import prolab.system.repository.*;
 import prolab.system.request.PosicaoEstoqueRequest;
 import prolab.system.response.ResiduoResponse;
@@ -46,6 +43,9 @@ class PosicaoEstoqueControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private PaleteRepository paleteRepository;
 
 
     private final ObjectMapper objectMapper = new ObjectMapper()
@@ -194,12 +194,22 @@ class PosicaoEstoqueControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -209,14 +219,12 @@ class PosicaoEstoqueControllerTest extends BaseIntegrationTest {
 
         ResiduoResponse response = ResiduoResponse.builder()
                 .id(residuo.getId())
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo(residuo.getTipoResiduo())
-                .quantidade(residuo.getQuantidade())
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
-                .status(residuo.getStatus())
-                .mtrVinculado(residuo.getMtrVinculado())
-                .dataDestinacao(residuo.getDataDestinacao())
-                .createdAt(residuo.getCreatedAt())
+                .status(StatusResiduo.ARMAZENADO)
+                .mtrVinculado("MTR Teste")
+                .dataDestinacao(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
 
 
@@ -227,9 +235,7 @@ class PosicaoEstoqueControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(residuo.getId()))
-                .andExpect(jsonPath("$[0].recebimentoId").value(response.recebimentoId()))
-                .andExpect(jsonPath("$[0].tipoResiduo").value(response.tipoResiduo()))
-                .andExpect(jsonPath("$[0].quantidade").value(response.quantidade()))
+                .andExpect(jsonPath("$[0].paleteId").value(response.paleteId()))
                 .andExpect(jsonPath("$[0].posicaoId").value(response.posicaoId()))
                 .andExpect(jsonPath("$[0].status").value(response.status().name()))
                 .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));

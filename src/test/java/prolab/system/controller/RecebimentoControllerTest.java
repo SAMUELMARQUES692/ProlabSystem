@@ -87,7 +87,6 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
                 .modeloCaminhao(caminhao.getModelo())
                 .motoristaCaminhao(caminhao.getMotorista())
                 .dataHoraRecebimento(LocalDateTime.now())
-                .pesoConferido(BigDecimal.TEN)
                 .observacoes("Obs Teste")
                 .build();
 
@@ -97,7 +96,6 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.agendamentoId").value(request.agendamentoId()))
-                .andExpect(jsonPath("$.pesoConferido").value(request.pesoConferido()))
                 .andExpect(jsonPath("$.observacoes").value(request.observacoes()));
     }
 
@@ -154,7 +152,6 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
                 .modeloCaminhao(caminhao.getModelo())
                 .motoristaCaminhao(caminhao.getMotorista())
                 .dataHoraRecebimento(LocalDateTime.now())
-                .pesoConferido(BigDecimal.TEN)
                 .observacoes("Obs Teste")
                 .build();
 
@@ -165,7 +162,6 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(recebimento.getId()))
                 .andExpect(jsonPath("$.agendamentoId").value(request.agendamentoId()))
-                .andExpect(jsonPath("$.pesoConferido").value(request.pesoConferido()))
                 .andExpect(jsonPath("$.observacoes").value(request.observacoes()));
     }
 

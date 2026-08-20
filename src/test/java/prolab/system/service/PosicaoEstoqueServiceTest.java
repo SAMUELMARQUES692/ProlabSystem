@@ -141,9 +141,6 @@ class PosicaoEstoqueServiceTest {
 
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(null)
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("mtr Teste")

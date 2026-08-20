@@ -9,10 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import prolab.system.configuration.BaseIntegrationTest;
 import prolab.system.entity.*;
-import prolab.system.enums.StatusAgendamento;
-import prolab.system.enums.StatusPosicao;
-import prolab.system.enums.StatusResiduo;
-import prolab.system.enums.TipoDeDestruicao;
+import prolab.system.enums.*;
 import prolab.system.repository.*;
 import prolab.system.request.AtualizarStatusRequest;
 import prolab.system.request.ResiduoRequest;
@@ -45,6 +42,9 @@ class ResiduoControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private ResiduoRepository residuoRepository;
+
+    @Autowired
+    private PaleteRepository paleteRepository;
 
 
     private final ObjectMapper objectMapper = new ObjectMapper()
@@ -92,7 +92,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .caminhao(caminhao)
                         .prime("Prime Test")
                         .dataHoraRecebimento(LocalDateTime.now())
-                        .pesoConferido(BigDecimal.TEN)
+                        .pesoConferido(BigDecimal.ZERO)
                         .observacoes("Observação Test")
                         .createdAt(LocalDateTime.now())
                         .build()
@@ -107,10 +107,21 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                .ticket("Ticket Teste")
+                .numeroPalete(2)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.LIQUIDO)
+                .recebimento(recebimento)
+                .createdAt(LocalDateTime.now())
+                .build()
+        );
+
         ResiduoRequest request = ResiduoRequest.builder()
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
                 .mtrVinculado("MTR Teste")
                 .build();
@@ -120,8 +131,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.recebimentoId").value(request.recebimentoId()))
-                .andExpect(jsonPath("$.tipoResiduo").value(request.tipoResiduo()))
+                .andExpect(jsonPath("$.paleteId").value(request.paleteId()))
                 .andExpect(jsonPath("$.posicaoId").value(request.posicaoId()))
                 .andExpect(jsonPath("$.mtrVinculado").value(request.mtrVinculado()));
     }
@@ -182,12 +192,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -196,9 +216,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
         );
 
         ResiduoRequest request = ResiduoRequest.builder()
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
                 .mtrVinculado("MTR Teste")
                 .build();
@@ -209,8 +227,6 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(residuo.getId()))
-                .andExpect(jsonPath("$.recebimentoId").value(request.recebimentoId()))
-                .andExpect(jsonPath("$.tipoResiduo").value(request.tipoResiduo()))
                 .andExpect(jsonPath("$.posicaoId").value(request.posicaoId()))
                 .andExpect(jsonPath("$.mtrVinculado").value(request.mtrVinculado()));
     }
@@ -271,12 +287,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -347,12 +373,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -362,9 +398,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
 
         ResiduoResponse response = ResiduoResponse.builder()
                 .id(residuo.getId())
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -378,8 +412,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(response.id()))
-                .andExpect(jsonPath("$.recebimentoId").value(response.recebimentoId()))
-                .andExpect(jsonPath("$.tipoResiduo").value(response.tipoResiduo()))
+                .andExpect(jsonPath("$.paleteId").value(response.paleteId()))
                 .andExpect(jsonPath("$.posicaoId").value(response.posicaoId()))
                 .andExpect(jsonPath("$.status").value(response.status().name()))
                 .andExpect(jsonPath("$.mtrVinculado").value(response.mtrVinculado()));
@@ -441,12 +474,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -523,12 +566,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -538,9 +591,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
 
         ResiduoResponse response = ResiduoResponse.builder()
                 .id(residuo.getId())
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -548,14 +599,13 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        mockMvc.perform(get("/api/residuos/{tipoResiduo}/tipo", residuo.getTipoResiduo())
+        mockMvc.perform(get("/api/residuos/{tipoResiduo}/tipo", residuo.getPalete().getTipo())
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(response.id()))
-                .andExpect(jsonPath("$[0].recebimentoId").value(response.recebimentoId()))
-                .andExpect(jsonPath("$[0].tipoResiduo").value(response.tipoResiduo()))
+                .andExpect(jsonPath("$[0].paleteId").value(response.paleteId()))
                 .andExpect(jsonPath("$[0].posicaoId").value(response.posicaoId()))
                 .andExpect(jsonPath("$[0].status").value(response.status().name()))
                 .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));
@@ -617,12 +667,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -632,9 +692,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
 
         ResiduoResponse response = ResiduoResponse.builder()
                 .id(residuo.getId())
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -648,8 +706,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(response.id()))
-                .andExpect(jsonPath("$[0].recebimentoId").value(response.recebimentoId()))
-                .andExpect(jsonPath("$[0].tipoResiduo").value(response.tipoResiduo()))
+                .andExpect(jsonPath("$[0].paleteId").value(response.paleteId()))
                 .andExpect(jsonPath("$[0].posicaoId").value(response.posicaoId()))
                 .andExpect(jsonPath("$[0].status").value(response.status().name()))
                 .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));
@@ -711,12 +768,22 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .build()
         );
 
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
         Residuo residuo = residuoRepository.save(
                 Residuo.builder()
-                        .recebimento(recebimento)
-                        .tipoResiduo("Tipo Teste")
-                        .quantidade(BigDecimal.TEN)
                         .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
                         .status(StatusResiduo.ARMAZENADO)
                         .mtrVinculado("MTR Teste")
                         .dataDestinacao(LocalDateTime.now())
@@ -726,9 +793,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
 
         ResiduoResponse response = ResiduoResponse.builder()
                 .id(residuo.getId())
-                .recebimentoId(recebimento.getId())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(palete.getId())
                 .posicaoId(posicaoEstoque.getId())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -743,8 +808,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(response)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(response.id()))
-                .andExpect(jsonPath("$[0].recebimentoId").value(response.recebimentoId()))
-                .andExpect(jsonPath("$[0].tipoResiduo").value(response.tipoResiduo()))
+                .andExpect(jsonPath("$[0].paleteId").value(response.paleteId()))
                 .andExpect(jsonPath("$[0].posicaoId").value(response.posicaoId()))
                 .andExpect(jsonPath("$[0].status").value(response.status().name()))
                 .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));

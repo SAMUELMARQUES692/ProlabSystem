@@ -66,7 +66,6 @@ class RecebimentoServiceTest {
                 .placaCaminhao("ABC1234")
                 .motoristaCaminhao("Marcos")
                 .dataHoraRecebimento(LocalDateTime.now())
-                .pesoConferido(null)
                 .observacoes("Observacao Teste")
                 .build();
 
@@ -129,7 +128,6 @@ class RecebimentoServiceTest {
                 .placaCaminhao("ABC1234")
                 .motoristaCaminhao("Marcos")
                 .dataHoraRecebimento(LocalDateTime.now())
-                .pesoConferido(null)
                 .observacoes("Observacao Teste")
                 .build();
 

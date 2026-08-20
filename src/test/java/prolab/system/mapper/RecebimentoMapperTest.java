@@ -18,7 +18,6 @@ class RecebimentoMapperTest {
     void toRecebimento() {
         RecebimentoRequest request = RecebimentoRequest.builder()
                 .dataHoraRecebimento(LocalDateTime.now())
-                .pesoConferido(null)
                 .observacoes("Observacao")
                 .build();
 
@@ -27,7 +26,6 @@ class RecebimentoMapperTest {
         assertNotNull(recebimento);
 
         assertEquals(request.dataHoraRecebimento(), recebimento.getDataHoraRecebimento());
-        assertEquals(request.pesoConferido(), recebimento.getPesoConferido());
         assertEquals(request.observacoes(), recebimento.getObservacoes());
     }
 
@@ -55,7 +53,6 @@ class RecebimentoMapperTest {
     void atualizarRecebimento() {
         RecebimentoRequest request = RecebimentoRequest.builder()
                 .dataHoraRecebimento(LocalDateTime.now())
-                .pesoConferido(null)
                 .observacoes("Observacao")
                 .build();
 
@@ -69,7 +66,6 @@ class RecebimentoMapperTest {
         mapper.atualizarRecebimento(request, recebimento);
 
         assertEquals(request.dataHoraRecebimento(), recebimento.getDataHoraRecebimento());
-        assertEquals(request.pesoConferido(), recebimento.getPesoConferido());
         assertEquals(request.observacoes(), recebimento.getObservacoes());
     }
 }
