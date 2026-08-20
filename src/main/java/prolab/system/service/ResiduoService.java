@@ -3,12 +3,15 @@ package prolab.system.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import prolab.system.entity.Palete;
 import prolab.system.entity.PosicaoEstoque;
 import prolab.system.entity.Recebimento;
 import prolab.system.entity.Residuo;
 import prolab.system.enums.StatusResiduo;
+import prolab.system.enums.TipoResiduo;
 import prolab.system.exception.*;
 import prolab.system.mapper.ResiduoMapper;
+import prolab.system.repository.PaleteRepository;
 import prolab.system.repository.PosicaoEstoqueRepository;
 import prolab.system.repository.RecebimentoRepository;
 import prolab.system.repository.ResiduoRepository;
@@ -25,22 +28,22 @@ public class ResiduoService {
 
     private final ResiduoRepository residuoRepository;
     private final ResiduoMapper residuoMapper;
-    private final RecebimentoRepository recebimentoRepository;
     private final PosicaoEstoqueRepository posicaoEstoqueRepository;
+    private final PaleteRepository paleteRepository;
 
 
     @Transactional
     public ResiduoResponse cadastrar(ResiduoRequest request) {
-        Recebimento recebimento = recebimentoRepository.findById(request.recebimentoId())
-                .orElseThrow(() -> new RecebimentoNotFoundException("Recebimento não encontrado com ID: " + request.recebimentoId()));
+        Palete palete = paleteRepository.findById(request.paleteId())
+                .orElseThrow(() -> new PaleteNotFoundException("Palete não encontrado com ID: " + request.paleteId()));
 
         PosicaoEstoque posicao = posicaoEstoqueRepository.findById(request.posicaoId())
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o ID: " + request.posicaoId()));
 
-        BigDecimal quantidadeAtual  = residuoRepository.somarQuantidadePorPosicao(request.posicaoId());
-        BigDecimal novaQuantidade = quantidadeAtual.add(request.quantidade());
+        BigDecimal quantidadeAtual  = residuoRepository.somarPesoPorPosicao(request.posicaoId());
+        BigDecimal novaQuantidade = quantidadeAtual.add(palete.getPeso());
 
-        if (posicao.getCapacidade().compareTo(novaQuantidade) < 0) {
+        if (posicao.getCapacidade() != null && posicao.getCapacidade().compareTo(novaQuantidade) < 0) {
             throw new CapacidadeExcedidaException(
                     "Capacidade da posição excedida. Capacidade: " + posicao.getCapacidade() +
                             ", quantidade após adicionar: " + novaQuantidade
@@ -48,7 +51,7 @@ public class ResiduoService {
         }
 
         Residuo residuo = residuoMapper.toResiduo(request);
-        residuo.setRecebimento(recebimento);
+        residuo.setPalete(palete);
         residuo.setPosicaoEstoque(posicao);
         residuo.setStatus(StatusResiduo.ARMAZENADO);
 
@@ -108,8 +111,8 @@ public class ResiduoService {
         }
     }
 
-    public List<ResiduoResponse> buscarPorTipoResiduo(String tipoResiduo) {
-        return residuoRepository.findByTipoResiduo(tipoResiduo).stream()
+    public List<ResiduoResponse> buscarPorTipoResiduo(TipoResiduo tipo) {
+        return residuoRepository.findByPaleteTipo(tipo).stream()
                 .map(residuoMapper::toResiduoResponse)
                 .toList();
     }
@@ -134,7 +137,7 @@ public class ResiduoService {
         if (posicaoEstoqueRepository.findById(posicaoId).isEmpty()) {
             throw new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId);
         }
-        return residuoRepository.somarQuantidadePorPosicao(posicaoId);
+        return residuoRepository.somarPesoPorPosicao(posicaoId);
     }
 
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import prolab.system.enums.StatusResiduo;
+import prolab.system.enums.TipoResiduo;
 import prolab.system.request.AtualizarStatusRequest;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
@@ -55,7 +56,7 @@ public interface ResiduoControllerDoc {
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "200", description = "Residuo encontrado com sucesso", content = @Content(schema = @Schema(implementation = ResiduoResponse.class)))
     @ApiResponse(responseCode = "404", description = "Residuo não encontrado", content = @Content())
-    ResponseEntity<List<ResiduoResponse>> buscarPorTipoResiduo(@PathVariable String tipoResiduo);
+    ResponseEntity<List<ResiduoResponse>> buscarPorTipoResiduo(@PathVariable TipoResiduo tipoResiduo);
 
     @Operation(summary = "Busca os Residuos pela posição no estoque", description = "Metodo responsavel por buscar residuos usando a posicão alocada no estoque",
             security = @SecurityRequirement(name = "bearerAuth"))

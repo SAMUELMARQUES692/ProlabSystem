@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "recebimentos")
@@ -34,6 +35,9 @@ public class Recebimento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "caminhao_id", nullable = false)
     private Caminhao caminhao;
+
+    @OneToMany(mappedBy = "recebimento")
+    private List<Palete> paletes;
 
     @Column(length = 20, unique = true, nullable = false)
     private String prime;

@@ -48,6 +48,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(PaleteNotFoundException.class)
+    public ResponseEntity<ErrorResponse> paleteNotFound(PaleteNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "PALETE_NAO_ENCONTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(RecebimentoNotFoundException.class)
     public ResponseEntity<ErrorResponse> recebimentoNotFound(RecebimentoNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(

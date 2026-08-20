@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import prolab.system.documentation.ResiduoControllerDoc;
 import prolab.system.enums.StatusResiduo;
+import prolab.system.enums.TipoResiduo;
 import prolab.system.request.AtualizarStatusRequest;
 import prolab.system.request.ResiduoRequest;
 import prolab.system.response.ResiduoResponse;
@@ -50,7 +51,7 @@ public class ResiduoController implements ResiduoControllerDoc {
     }
 
     @GetMapping("{tipoResiduo}/tipo")
-    public ResponseEntity<List<ResiduoResponse>> buscarPorTipoResiduo(@PathVariable String tipoResiduo) {
+    public ResponseEntity<List<ResiduoResponse>> buscarPorTipoResiduo(@PathVariable TipoResiduo tipoResiduo) {
         return ResponseEntity.ok(residuoService.buscarPorTipoResiduo(tipoResiduo));
     }
 

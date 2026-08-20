@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import prolab.system.entity.Residuo;
 import prolab.system.enums.StatusResiduo;
+import prolab.system.enums.TipoResiduo;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,10 +14,10 @@ import java.util.Optional;
 public interface ResiduoRepository extends JpaRepository<Residuo, Long> {
 
     List<Residuo> findByStatus(StatusResiduo status);
-    List<Residuo> findByTipoResiduo(String tipoResiduo);
+    List<Residuo> findByPaleteTipo(TipoResiduo tipo);
     List<Residuo> findByPosicaoEstoqueId(Long posicaoId);
     List<Residuo> findByPosicaoEstoqueCodigo(String codigo);
 
-    @Query("SELECT COALESCE(SUM(r.quantidade), 0) FROM Residuo r WHERE r.posicaoEstoque.id = :posicaoId")
-    BigDecimal somarQuantidadePorPosicao(@Param("posicaoId") Long posicaoId);
+    @Query("SELECT COALESCE(SUM(r.palete.peso), 0) FROM Residuo r WHERE r.posicaoEstoque.id = :posicaoId")
+    BigDecimal somarPesoPorPosicao(@Param("posicaoId") Long posicaoId);
 }

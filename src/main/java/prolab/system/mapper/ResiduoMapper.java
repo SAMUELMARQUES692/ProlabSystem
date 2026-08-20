@@ -11,19 +11,19 @@ import prolab.system.response.ResiduoResponse;
 public interface ResiduoMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "recebimento", ignore = true)
+    @Mapping(target = "palete", ignore = true)
     @Mapping(target = "posicaoEstoque", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Residuo toResiduo(ResiduoRequest request);
 
-    @Mapping(target = "recebimentoId", source = "recebimento.id")
+    @Mapping(target = "paleteId", source = "palete.id")
     @Mapping(target = "posicaoId", source = "posicaoEstoque.id")
     ResiduoResponse toResiduoResponse(Residuo residuo);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "recebimento", ignore = true)
+    @Mapping(target = "palete", ignore = true)
     @Mapping(target = "posicaoEstoque", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

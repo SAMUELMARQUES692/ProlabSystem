@@ -4,43 +4,47 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import prolab.system.enums.StatusResiduo;
+import prolab.system.enums.EstadoFisico;
+import prolab.system.enums.TipoResiduo;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "residuos")
-@Setter
+@Table(name = "paletes")
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = {"palete", "posicaoEstoque"})
+@ToString(exclude = {"recebimento"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Residuo {
+public class Palete {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posicao_id", nullable = false)
-    private PosicaoEstoque posicaoEstoque;
+    @Column(nullable = false, unique = true)
+    private String ticket;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "palete_id", nullable = false, unique = true)
-    private Palete palete;
+    @Column(name = "numero_palete", nullable = false)
+    private String numeroPalete;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusResiduo status;
+    private TipoResiduo tipo;
 
-    @Column(name = "mtr_vinculado", length = 355)
-    private String mtrVinculado;
+    @Column(nullable = false)
+    private BigDecimal peso;
 
-    @Column(name = "data_destinacao")
-    private LocalDateTime dataDestinacao;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_fisico", nullable = false)
+    private EstadoFisico estadoFisico;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recebimento_id", nullable = false)
+    private Recebimento recebimento;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -49,4 +53,5 @@ public class Residuo {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
 }

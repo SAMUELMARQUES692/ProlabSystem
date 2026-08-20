@@ -7,8 +7,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import prolab.system.entity.*;
 import prolab.system.enums.StatusPosicao;
 import prolab.system.enums.StatusResiduo;
+import prolab.system.enums.TipoResiduo;
 import prolab.system.exception.TransicaoStatusInvalidaException;
 import prolab.system.mapper.ResiduoMapper;
+import prolab.system.repository.PaleteRepository;
 import prolab.system.repository.PosicaoEstoqueRepository;
 import prolab.system.repository.RecebimentoRepository;
 import prolab.system.repository.ResiduoRepository;
@@ -40,6 +42,9 @@ class ResiduoServiceTest {
     @Mock
     PosicaoEstoqueRepository posicaoEstoqueRepository;
 
+    @Mock
+    PaleteRepository paleteRepository;
+
     @Captor
     ArgumentCaptor<Residuo> argumentCaptor;
 
@@ -47,9 +52,7 @@ class ResiduoServiceTest {
     void cadastrar() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -58,9 +61,7 @@ class ResiduoServiceTest {
                 .build();
 
         ResiduoRequest request = ResiduoRequest.builder()
-                .recebimentoId(1L)
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(1L)
                 .posicaoId(1L)
                 .mtrVinculado("MTR Teste")
                 .build();
@@ -85,16 +86,16 @@ class ResiduoServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Mockito.when(recebimentoRepository.findById(request.recebimentoId())).thenReturn(Optional.of(recebimento));
+        Mockito.when(recebimentoRepository.findById(request.paleteId())).thenReturn(Optional.of(recebimento));
         Mockito.when(posicaoEstoqueRepository.findById(request.posicaoId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.somarQuantidadePorPosicao(request.posicaoId())).thenReturn(BigDecimal.ZERO); // ou qualquer valor que faça sentido pro cenário
+        Mockito.when(residuoRepository.somarPesoPorPosicao(request.posicaoId())).thenReturn(BigDecimal.ZERO); // ou qualquer valor que faça sentido pro cenário
         Mockito.when(residuoMapper.toResiduo(request)).thenReturn(residuo);
 
         residuoService.cadastrar(request);
 
-        Mockito.verify(recebimentoRepository).findById(request.recebimentoId());
+        Mockito.verify(recebimentoRepository).findById(request.paleteId());
         Mockito.verify(posicaoEstoqueRepository).findById(request.posicaoId());
-        Mockito.verify(residuoRepository).somarQuantidadePorPosicao(request.posicaoId());
+        Mockito.verify(residuoRepository).somarPesoPorPosicao(request.posicaoId());
         Mockito.verify(residuoMapper).toResiduo(request);
         Mockito.verify(residuoRepository).save(argumentCaptor.capture());
         Mockito.verify(residuoMapper).toResiduoResponse(Mockito.any());
@@ -104,9 +105,7 @@ class ResiduoServiceTest {
     void atualizar() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -115,9 +114,7 @@ class ResiduoServiceTest {
                 .build();
 
         ResiduoRequest request = ResiduoRequest.builder()
-                .recebimentoId(1L)
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .paleteId(1L)
                 .posicaoId(1L)
                 .mtrVinculado("MTR Teste")
                 .build();
@@ -136,9 +133,7 @@ class ResiduoServiceTest {
     void deletar() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -158,9 +153,7 @@ class ResiduoServiceTest {
     void buscarPorId() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -180,9 +173,7 @@ class ResiduoServiceTest {
     void avancarStatus() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -217,11 +208,14 @@ class ResiduoServiceTest {
 
     @Test
     void buscarPorTipoResiduo() {
+        Palete palete = Palete.builder()
+                .id(1L)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .build();
+
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(palete)
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -229,11 +223,11 @@ class ResiduoServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Mockito.when(residuoRepository.findByTipoResiduo(residuo.getTipoResiduo())).thenReturn(List.of(residuo));
+        Mockito.when(residuoRepository.findByPaleteTipo(residuo.getPalete().getTipo())).thenReturn(List.of(residuo));
 
-        residuoService.buscarPorTipoResiduo(residuo.getTipoResiduo());
+        residuoService.buscarPorTipoResiduo(palete.getTipo());
 
-        Mockito.verify(residuoRepository).findByTipoResiduo(residuo.getTipoResiduo());
+        Mockito.verify(residuoRepository).findByPaleteTipo(residuo.getPalete().getTipo());
         Mockito.verify(residuoMapper).toResiduoResponse(residuo);
     }
 
@@ -241,9 +235,7 @@ class ResiduoServiceTest {
     void buscarPorPosicao() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -273,9 +265,7 @@ class ResiduoServiceTest {
     void buscarPorStatusResiduo() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .recebimento(Recebimento.builder().id(1L).build())
-                .tipoResiduo("Tipo Teste")
-                .quantidade(BigDecimal.TEN)
+                .palete(Palete.builder().id(1L).build())
                 .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
                 .status(StatusResiduo.ARMAZENADO)
                 .mtrVinculado("MTR Teste")
@@ -302,12 +292,12 @@ class ResiduoServiceTest {
                 .build();
 
         Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.somarQuantidadePorPosicao(posicaoEstoque.getId())).thenReturn(BigDecimal.valueOf(5));
+        Mockito.when(residuoRepository.somarPesoPorPosicao(posicaoEstoque.getId())).thenReturn(BigDecimal.valueOf(5));
 
         BigDecimal total = residuoService.calculoTotalPesoPorPosicao(posicaoEstoque.getId());
 
         Mockito.verify(posicaoEstoqueRepository).findById(posicaoEstoque.getId());
-        Mockito.verify(residuoRepository).somarQuantidadePorPosicao(posicaoEstoque.getId());
+        Mockito.verify(residuoRepository).somarPesoPorPosicao(posicaoEstoque.getId());
         assertEquals(BigDecimal.valueOf(5), total);
     }
 }

@@ -20,8 +20,6 @@ class ResiduoMapperTest {
     @Test
     void toResiduo() {
         ResiduoRequest request = ResiduoRequest.builder()
-                .tipoResiduo("Oleo de Carro")
-                .quantidade(BigDecimal.valueOf(10.5))
                 .mtrVinculado("123123")
                 .build();
 
@@ -29,8 +27,6 @@ class ResiduoMapperTest {
 
         assertNotNull(residuo);
 
-        assertEquals(request.tipoResiduo(), residuo.getTipoResiduo());
-        assertEquals(request.quantidade(), residuo.getQuantidade());
         assertEquals(request.mtrVinculado(), residuo.getMtrVinculado());
 
     }
@@ -39,7 +35,6 @@ class ResiduoMapperTest {
     void toResiduoResponse() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .quantidade(BigDecimal.valueOf(10.5))
                 .mtrVinculado("123123")
                 .status(StatusResiduo.ARMAZENADO)
                 .dataDestinacao(LocalDateTime.now())
@@ -51,7 +46,6 @@ class ResiduoMapperTest {
         assertNotNull(response);
 
         assertEquals(residuo.getId(), response.id());
-        assertEquals(residuo.getQuantidade(), response.quantidade());
         assertEquals(residuo.getMtrVinculado(), response.mtrVinculado());
         assertEquals(residuo.getStatus(), response.status());
         assertEquals(residuo.getDataDestinacao(), response.dataDestinacao());
@@ -61,14 +55,11 @@ class ResiduoMapperTest {
     @Test
     void atualizarResiduo() {
         ResiduoRequest request = ResiduoRequest.builder()
-                .tipoResiduo("Oleo de Carro")
-                .quantidade(BigDecimal.valueOf(10.5))
                 .mtrVinculado("123123")
                 .build();
 
         Residuo residuo = Residuo.builder()
                 .id(1L)
-                .quantidade(BigDecimal.valueOf(10.5))
                 .mtrVinculado("123123")
                 .status(StatusResiduo.ARMAZENADO)
                 .dataDestinacao(LocalDateTime.now())
@@ -79,8 +70,6 @@ class ResiduoMapperTest {
 
         assertNotNull(residuo);
 
-        assertEquals(request.tipoResiduo(), residuo.getTipoResiduo());
-        assertEquals(request.quantidade(), residuo.getQuantidade());
         assertEquals(request.mtrVinculado(), residuo.getMtrVinculado());
     }
 }
