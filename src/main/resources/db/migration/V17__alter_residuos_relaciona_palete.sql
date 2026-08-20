@@ -1,3 +1,5 @@
+DELETE FROM residuos;
+
 ALTER TABLE residuos DROP COLUMN tipo_residuo;
 ALTER TABLE residuos DROP COLUMN quantidade;
 ALTER TABLE residuos DROP COLUMN recebimento_id;
