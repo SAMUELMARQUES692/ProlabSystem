@@ -78,6 +78,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(PrimeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> documentoNotFound(PrimeNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "PRIME_NAO_ENCONTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(PosicaoNotFoundException.class)
     public ResponseEntity<ErrorResponse> posicaoNotFound(PosicaoNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(
