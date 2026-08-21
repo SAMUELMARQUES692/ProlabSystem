@@ -18,6 +18,7 @@ import prolab.system.repository.RecebimentoRepository;
 import prolab.system.request.RecebimentoRequest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -162,4 +163,49 @@ class RecebimentoServiceTest {
         Mockito.verify(recebimentoRepository).findById(recebimento.getId());
         Mockito.verify(recebimentoRepository).deleteById(recebimento.getId());
     }
+
+    @Test
+    void buscarTodos() {
+        Recebimento recebimento = Recebimento.builder()
+                .id(1L)
+                .agendamento(Agendamento.builder().id(1L).build())
+                .cliente(Cliente.builder().id(1L).build())
+                .caminhao(Caminhao.builder().id(1L).build())
+                .prime("Prime Teste")
+                .dataHoraRecebimento(LocalDateTime.now())
+                .pesoConferido(null)
+                .observacoes("Observacao Teste")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(recebimentoRepository.findAll()).thenReturn(List.of(recebimento));
+
+        recebimentoService.buscarTodos();
+
+        Mockito.verify(recebimentoRepository).findAll();
+        Mockito.verify(recebimentoMapper).toRecebimentoResponse(Mockito.any());
+    }
+
+    @Test
+    void buscarPorPrime() {
+        Recebimento recebimento = Recebimento.builder()
+                .id(1L)
+                .agendamento(Agendamento.builder().id(1L).build())
+                .cliente(Cliente.builder().id(1L).build())
+                .caminhao(Caminhao.builder().id(1L).build())
+                .prime("Prime Teste")
+                .dataHoraRecebimento(LocalDateTime.now())
+                .pesoConferido(null)
+                .observacoes("Observacao Teste")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(recebimentoRepository.findByPrime(recebimento.getPrime())).thenReturn(Optional.of(recebimento));
+
+        recebimentoService.buscarPorPrime(recebimento.getPrime());
+
+        Mockito.verify(recebimentoRepository).findByPrime(recebimento.getPrime());
+        Mockito.verify(recebimentoMapper).toRecebimentoResponse(Mockito.any());
+    }
+
 }
