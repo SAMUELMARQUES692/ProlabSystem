@@ -117,14 +117,13 @@ public class ResiduoService {
                 .toList();
     }
 
-    public List<ResiduoResponse> buscarPorPosicao(Long posicaoId) {
+    public List<ResiduoResponse> buscarPorPosicaoId(Long posicaoId) {
         posicaoEstoqueRepository.findById(posicaoId)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição Não encontrada com o ID: " + posicaoId));
 
        return residuoRepository.findByPosicaoEstoqueId(posicaoId).stream()
                .map(residuoMapper::toResiduoResponse)
                .toList();
-
     }
 
     public List<ResiduoResponse> buscarPorStatusResiduo(StatusResiduo status) {

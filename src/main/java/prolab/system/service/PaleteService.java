@@ -2,7 +2,6 @@ package prolab.system.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.Palete;
 import prolab.system.entity.Recebimento;
