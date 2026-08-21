@@ -16,6 +16,7 @@ import prolab.system.response.PaleteResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,11 +94,82 @@ class PaleteServiceTest {
         Mockito.verify(recebimentoRepository).save(recebimento);
         Mockito.verify(paleteMapper).toPaleteResponse(palete);
         Mockito.verify(paleteRepository).save(argumentCaptor.capture());
-
-
-
-
-
-
     }
+
+    @Test
+    void buscarTodos() {
+        Palete palete = Palete.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        PaleteResponse response = PaleteResponse.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(paleteRepository.findAllComRecebimento()).thenReturn(List.of(palete));
+        Mockito.when(paleteMapper.toPaleteResponse(palete)).thenReturn(response);
+
+        paleteService.buscarTodos();
+
+        Mockito.verify(paleteRepository).findAllComRecebimento();
+        Mockito.verify(paleteMapper).toPaleteResponse(palete);
+    }
+
+    @Test
+    void buscarPorPrime() {
+        Recebimento recebimento = Recebimento.builder()
+                .id(1L)
+                .agendamento(Agendamento.builder().id(1L).build())
+                .cliente(Cliente.builder().id(1L).build())
+                .caminhao(Caminhao.builder().id(1L).build())
+                .prime("Prime Teste")
+                .dataHoraRecebimento(LocalDateTime.now())
+                .pesoConferido(BigDecimal.TEN)
+                .observacoes("Observacao Teste")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Palete palete = Palete.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        PaleteResponse response = PaleteResponse.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(recebimentoRepository.findByPrime(recebimento.getPrime())).thenReturn(Optional.of(recebimento));
+        Mockito.when(paleteRepository.findAllPaletesPrime(recebimento.getPrime())).thenReturn(List.of(palete));
+        Mockito.when(paleteMapper.toPaleteResponse(palete)).thenReturn(response);
+
+        paleteService.buscarPorPrime(recebimento.getPrime());
+
+        Mockito.verify(recebimentoRepository).findByPrime(recebimento.getPrime());
+        Mockito.verify(paleteRepository).findAllPaletesPrime(recebimento.getPrime());
+        Mockito.verify(paleteMapper).toPaleteResponse(palete);
+    }
+
 }
