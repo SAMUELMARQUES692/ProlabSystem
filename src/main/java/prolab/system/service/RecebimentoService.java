@@ -18,6 +18,7 @@ import prolab.system.request.RecebimentoRequest;
 import prolab.system.response.RecebimentoResponse;
 
 import java.time.Year;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -82,6 +83,12 @@ public class RecebimentoService {
         recebimentoRepository.findById(id)
                 .orElseThrow(() -> new RecebimentoNotFoundException("Recebimento não encontrado"));
         recebimentoRepository.deleteById(id);
+    }
+
+    public List<RecebimentoResponse> buscarTodos() {
+        return recebimentoRepository.findAll().stream()
+                .map(recebimentoMapper::toRecebimentoResponse)
+                .toList();
     }
 
 
