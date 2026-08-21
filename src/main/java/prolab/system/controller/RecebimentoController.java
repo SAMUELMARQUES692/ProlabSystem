@@ -42,4 +42,9 @@ public class RecebimentoController implements RecebimentoControllerDoc {
         return ResponseEntity.ok(recebimentoService.buscarTodos());
     }
 
+    @GetMapping("/prime/{prime}")
+    public ResponseEntity<RecebimentoResponse> buscarPorPrime(@PathVariable String prime) {
+        return ResponseEntity.ok(recebimentoService.buscarPorPrime(prime));
+    }
+
 }
