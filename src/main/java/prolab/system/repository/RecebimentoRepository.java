@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface RecebimentoRepository extends JpaRepository<Recebimento, Long> {
 
     Optional<Recebimento> findByAgendamentoId(Long agendamentoId);
+    Optional<Recebimento> findByPrime(String prime);
 
 }

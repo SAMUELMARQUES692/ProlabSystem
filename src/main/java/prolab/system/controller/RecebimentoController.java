@@ -10,6 +10,7 @@ import prolab.system.response.RecebimentoResponse;
 import prolab.system.service.RecebimentoService;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,6 +35,16 @@ public class RecebimentoController implements RecebimentoControllerDoc {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         recebimentoService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RecebimentoResponse>> buscarTodos() {
+        return ResponseEntity.ok(recebimentoService.buscarTodos());
+    }
+
+    @GetMapping("/prime/{prime}")
+    public ResponseEntity<RecebimentoResponse> buscarPorPrime(@PathVariable String prime) {
+        return ResponseEntity.ok(recebimentoService.buscarPorPrime(prime));
     }
 
 }

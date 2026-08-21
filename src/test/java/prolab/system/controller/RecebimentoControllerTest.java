@@ -19,6 +19,7 @@ import prolab.system.repository.CaminhaoRepository;
 import prolab.system.repository.ClienteRepository;
 import prolab.system.repository.RecebimentoRepository;
 import prolab.system.request.RecebimentoRequest;
+import prolab.system.response.RecebimentoResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -217,5 +218,151 @@ class RecebimentoControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recebimento)))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void buscarTodos() throws Exception {
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Caminhao caminhao = caminhaoRepository.save(
+                Caminhao.builder()
+                        .placa("ABC1234")
+                        .modelo("Modelo Teste")
+                        .motorista("Motorista Teste")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Recebimento recebimento = recebimentoRepository.save(
+                Recebimento.builder()
+                        .agendamento(agendamento)
+                        .cliente(cliente)
+                        .caminhao(caminhao)
+                        .prime("Prime Test")
+                        .dataHoraRecebimento(LocalDateTime.now())
+                        .pesoConferido(BigDecimal.TEN)
+                        .observacoes("Observação Test")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        RecebimentoResponse response = RecebimentoResponse.builder()
+                .id(recebimento.getId())
+                .agendamentoId(agendamento.getId())
+                .clienteId(cliente.getId())
+                .caminhaoId(caminhao.getId())
+                .prime(recebimento.getPrime())
+                .dataHoraRecebimento(recebimento.getDataHoraRecebimento())
+                .pesoConferido(recebimento.getPesoConferido())
+                .observacoes(recebimento.getObservacoes())
+                .createdAt(recebimento.getCreatedAt())
+                .build();
+
+        mockMvc.perform(get("/api/recebimentos")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(response)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(recebimento.getId()))
+                .andExpect(jsonPath("$[0].agendamentoId").value(response.agendamentoId()))
+                .andExpect(jsonPath("$[0].clienteId").value(response.clienteId()))
+                .andExpect(jsonPath("$[0].caminhaoId").value(response.caminhaoId()))
+                .andExpect(jsonPath("$[0].prime").value(response.prime()))
+                .andExpect(jsonPath("$[0].pesoConferido").value(response.pesoConferido()))
+                .andExpect(jsonPath("$[0].observacoes").value(response.observacoes()));
+    }
+
+    @Test
+    void buscarPorPrime() throws Exception {
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Caminhao caminhao = caminhaoRepository.save(
+                Caminhao.builder()
+                        .placa("ABC1234")
+                        .modelo("Modelo Teste")
+                        .motorista("Motorista Teste")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Recebimento recebimento = recebimentoRepository.save(
+                Recebimento.builder()
+                        .agendamento(agendamento)
+                        .cliente(cliente)
+                        .caminhao(caminhao)
+                        .prime("Prime Test")
+                        .dataHoraRecebimento(LocalDateTime.now())
+                        .pesoConferido(BigDecimal.TEN)
+                        .observacoes("Observação Test")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        RecebimentoResponse response = RecebimentoResponse.builder()
+                .id(recebimento.getId())
+                .agendamentoId(agendamento.getId())
+                .clienteId(cliente.getId())
+                .caminhaoId(caminhao.getId())
+                .prime(recebimento.getPrime())
+                .dataHoraRecebimento(recebimento.getDataHoraRecebimento())
+                .pesoConferido(recebimento.getPesoConferido())
+                .observacoes(recebimento.getObservacoes())
+                .createdAt(recebimento.getCreatedAt())
+                .build();
+
+        mockMvc.perform(get("/api/recebimentos/prime/{prime}", recebimento.getPrime())
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(response)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(recebimento.getId()))
+                .andExpect(jsonPath("$.agendamentoId").value(response.agendamentoId()))
+                .andExpect(jsonPath("$.clienteId").value(response.clienteId()))
+                .andExpect(jsonPath("$.caminhaoId").value(response.caminhaoId()))
+                .andExpect(jsonPath("$.prime").value(response.prime()))
+                .andExpect(jsonPath("$.pesoConferido").value(response.pesoConferido()))
+                .andExpect(jsonPath("$.observacoes").value(response.observacoes()));
     }
 }
