@@ -12,6 +12,7 @@ public record PaleteResponse(
         Long id,
         String ticket,
         Long recebimentoId,
+        String prime,
         Integer numeroPalete,
         TipoResiduo tipo,
         BigDecimal peso,

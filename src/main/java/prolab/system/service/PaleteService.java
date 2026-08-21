@@ -2,6 +2,7 @@ package prolab.system.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.Palete;
 import prolab.system.entity.Recebimento;
@@ -14,6 +15,7 @@ import prolab.system.request.PaleteRequest;
 import prolab.system.response.PaleteResponse;
 
 import java.time.Year;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -49,6 +51,23 @@ public class PaleteService {
         int anoAtual = Year.now().getValue();
         Integer numero = controleSequecialTicketRepository.proximoNumero(anoAtual);
         return String.format("TCK-%d-%04d", anoAtual, numero);
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<PaleteResponse> buscarTodos() {
+        return paleteRepository.findAllComRecebimento().stream()
+                .map(paleteMapper::toPaleteResponse)
+                .toList();
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<PaleteResponse> buscarPorPrime(String prime) {
+      recebimentoRepository.findByPrime(prime)
+               .orElseThrow(() -> new RuntimeException("Prime não encontrado"));
+
+        return paleteRepository.findAllPaletesPrime(prime).stream()
+                .map(paleteMapper::toPaleteResponse)
+                .toList();
     }
 
 
