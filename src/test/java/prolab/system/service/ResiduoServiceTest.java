@@ -272,6 +272,36 @@ class ResiduoServiceTest {
     }
 
     @Test
+    void buscarPorCodigoPosicao() {
+        Residuo residuo = Residuo.builder()
+                .id(1L)
+                .palete(Palete.builder().id(1L).build())
+                .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
+                .status(StatusResiduo.ARMAZENADO)
+                .mtrVinculado("MTR Teste")
+                .dataDestinacao(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        PosicaoEstoque posicaoEstoque = PosicaoEstoque.builder()
+                .id(1L)
+                .codigo("Codigo Teste")
+                .capacidade(BigDecimal.TEN)
+                .status(StatusPosicao.OCUPADA)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(posicaoEstoqueRepository.findByCodigo(posicaoEstoque.getCodigo())).thenReturn(Optional.of(posicaoEstoque));
+        Mockito.when(residuoRepository.findByPosicaoEstoqueCodigo(posicaoEstoque.getCodigo())).thenReturn(List.of(residuo));
+
+        residuoService.buscarPorCodigoPosicao(posicaoEstoque.getCodigo());
+
+        Mockito.verify(posicaoEstoqueRepository).findByCodigo(posicaoEstoque.getCodigo());
+        Mockito.verify(residuoRepository).findByPosicaoEstoqueCodigo(posicaoEstoque.getCodigo());
+        Mockito.verify(residuoMapper).toResiduoResponse(residuo);
+    }
+
+    @Test
     void buscarPorStatusResiduo() {
         Residuo residuo = Residuo.builder()
                 .id(1L)

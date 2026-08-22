@@ -30,7 +30,7 @@ public class PaleteController {
         return ResponseEntity.ok(paleteService.buscarTodos());
     }
 
-    @GetMapping("{prime}")
+    @GetMapping("{prime}/prime")
     public ResponseEntity<List<PaleteResponse>> buscarPorPrime(@PathVariable String prime) {
         return ResponseEntity.ok(paleteService.buscarPorPrime(prime));
     }
