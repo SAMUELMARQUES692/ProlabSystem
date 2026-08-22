@@ -242,7 +242,7 @@ class ResiduoServiceTest {
     }
 
     @Test
-    void buscarPorPosicao() {
+    void buscarPorPosicaoId() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
                 .palete(Palete.builder().id(1L).build())
@@ -264,7 +264,7 @@ class ResiduoServiceTest {
         Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.of(posicaoEstoque));
         Mockito.when(residuoRepository.findByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(List.of(residuo));
 
-        residuoService.buscarPorPosicao(posicaoEstoque.getId());
+        residuoService.buscarPorPosicaoId(posicaoEstoque.getId());
 
         Mockito.verify(posicaoEstoqueRepository).findById(posicaoEstoque.getId());
         Mockito.verify(residuoRepository).findByPosicaoEstoqueId(posicaoEstoque.getId());
