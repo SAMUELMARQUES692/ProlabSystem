@@ -20,6 +20,7 @@ public interface PaleteMapper {
 
     @Mapping(target = "recebimentoId", source = "recebimento.id")
     @Mapping(target = "prime", source = "recebimento.prime")
+    @Mapping(target = "armazenado", expression = "java(palete.getResiduo() != null)")
     PaleteResponse toPaleteResponse(Palete palete);
 
     @Mapping(target = "id", ignore = true)

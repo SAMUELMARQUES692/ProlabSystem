@@ -17,5 +17,6 @@ public record PaleteResponse(
         TipoResiduo tipo,
         BigDecimal peso,
         EstadoFisico estadoFisico,
+        Boolean armazenado,
         LocalDateTime createdAt
 ) {}

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = {"recebimento"})
+@ToString(exclude = {"recebimento", "residuo"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -45,6 +45,9 @@ public class Palete {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recebimento_id", nullable = false)
     private Recebimento recebimento;
+
+    @OneToOne(mappedBy = "palete", fetch = FetchType.LAZY)
+    private Residuo residuo;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

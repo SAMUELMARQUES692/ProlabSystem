@@ -92,7 +92,7 @@ public class RecebimentoService {
     }
 
     public RecebimentoResponse buscarPorPrime(String prime) {
-        Recebimento recebimento = recebimentoRepository.findByPrime(prime)
+        Recebimento recebimento = recebimentoRepository.existsByPrime(prime)
                 .orElseThrow(() -> new RuntimeException("Prime não encontrado"));
         return recebimentoMapper.toRecebimentoResponse(recebimento);
     }
