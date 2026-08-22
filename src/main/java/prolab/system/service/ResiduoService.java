@@ -111,12 +111,14 @@ public class ResiduoService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<ResiduoResponse> buscarPorTipoResiduo(TipoResiduo tipo) {
         return residuoRepository.findByPaleteTipo(tipo).stream()
                 .map(residuoMapper::toResiduoResponse)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ResiduoResponse> buscarPorPosicaoId(Long posicaoId) {
         posicaoEstoqueRepository.findById(posicaoId)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição Não encontrada com o ID: " + posicaoId));
@@ -126,6 +128,7 @@ public class ResiduoService {
                .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ResiduoResponse> buscarPorCodigoPosicao(String codigo) {
        PosicaoEstoque posicaoEstoque = posicaoEstoqueRepository.findByCodigo(codigo)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição Não encontrada com o ID: " + codigo));
@@ -135,12 +138,14 @@ public class ResiduoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ResiduoResponse> buscarPorStatusResiduo(StatusResiduo status) {
         return residuoRepository.findByStatus(status).stream()
                 .map(residuoMapper::toResiduoResponse)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public BigDecimal calculoTotalPesoPorPosicao(Long posicaoId) {
         if (posicaoEstoqueRepository.findById(posicaoId).isEmpty()) {
             throw new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId);
