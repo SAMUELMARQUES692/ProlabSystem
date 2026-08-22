@@ -126,6 +126,15 @@ public class ResiduoService {
                .toList();
     }
 
+    public List<ResiduoResponse> buscarPorCodigoPosicao(String codigo) {
+       PosicaoEstoque posicaoEstoque = posicaoEstoqueRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new PosicaoNotFoundException("Posição Não encontrada com o ID: " + codigo));
+
+        return residuoRepository.findByPosicaoEstoqueCodigo(posicaoEstoque.getCodigo()).stream()
+                .map(residuoMapper::toResiduoResponse)
+                .toList();
+    }
+
     public List<ResiduoResponse> buscarPorStatusResiduo(StatusResiduo status) {
         return residuoRepository.findByStatus(status).stream()
                 .map(residuoMapper::toResiduoResponse)
