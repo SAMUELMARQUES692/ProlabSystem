@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public record ResiduoResponse(
         Long id,
         Long paleteId,
+        String ticket,
+        String prime,
         Long posicaoId,
         StatusResiduo status,
         String mtrVinculado,

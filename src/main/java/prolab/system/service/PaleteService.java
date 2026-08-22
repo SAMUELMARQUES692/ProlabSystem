@@ -2,10 +2,10 @@ package prolab.system.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.Palete;
 import prolab.system.entity.Recebimento;
+import prolab.system.exception.PrimeNotFoundException;
 import prolab.system.exception.RecebimentoNotFoundException;
 import prolab.system.mapper.PaleteMapper;
 import prolab.system.repository.ControleSequecialTicketRepository;
@@ -63,7 +63,7 @@ public class PaleteService {
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<PaleteResponse> buscarPorPrime(String prime) {
       recebimentoRepository.findByPrime(prime)
-               .orElseThrow(() -> new RuntimeException("Prime não encontrado"));
+               .orElseThrow(() -> new PrimeNotFoundException("Prime não encontrado"));
 
         return paleteRepository.findAllPaletesPrime(prime).stream()
                 .map(paleteMapper::toPaleteResponse)
