@@ -7,6 +7,7 @@ import prolab.system.entity.Palete;
 import prolab.system.entity.PosicaoEstoque;
 import prolab.system.entity.Recebimento;
 import prolab.system.entity.Residuo;
+import prolab.system.enums.StatusPosicao;
 import prolab.system.enums.StatusResiduo;
 import prolab.system.enums.TipoResiduo;
 import prolab.system.exception.*;
@@ -56,6 +57,10 @@ public class ResiduoService {
         residuo.setStatus(StatusResiduo.ARMAZENADO);
 
         Residuo salvo = residuoRepository.save(residuo);
+
+        posicao.setStatus(StatusPosicao.OCUPADA);
+        posicaoEstoqueRepository.save(posicao);
+
         return residuoMapper.toResiduoResponse(salvo);
     }
 
@@ -92,6 +97,8 @@ public class ResiduoService {
         residuo.setStatus(novoStatus);
         if (novoStatus == StatusResiduo.DESTRUIDO) {
             residuo.setDataDestinacao(LocalDateTime.now());
+            residuo.getPosicaoEstoque().setStatus(StatusPosicao.DISPONIVEL);
+            posicaoEstoqueRepository.save(residuo.getPosicaoEstoque());
         }
 
         Residuo salvo = residuoRepository.save(residuo);
