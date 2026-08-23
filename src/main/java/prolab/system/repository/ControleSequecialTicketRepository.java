@@ -10,10 +10,10 @@ public interface ControleSequecialTicketRepository extends JpaRepository<Control
 
     @Transactional
     @Query(value = """
-        INSERT INTO controle_sequencial (ano, ultimo_numero)
+        INSERT INTO  controle_sequencial_ticket (ano, ultimo_numero)
         VALUES (:ano, 1)
         ON CONFLICT (ano)
-        DO UPDATE SET ultimo_numero = controle_sequencial.ultimo_numero + 1
+        DO UPDATE SET ultimo_numero = controle_sequencial_ticket.ultimo_numero + 1
         RETURNING ultimo_numero
         """, nativeQuery = true)
     Integer proximoNumero(@Param("ano") Integer ano);
