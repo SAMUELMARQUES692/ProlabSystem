@@ -30,5 +30,8 @@ public interface ResiduoRepository extends JpaRepository<Residuo, Long> {
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.status = :status")
     List<Residuo> findByStatusComPaleteRecebimento(@Param("status") StatusResiduo status);
 
+    @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento JOIN FETCH r.posicaoEstoque")
+    List<Residuo> findAllComPaleteRecebimento();
+
 
 }

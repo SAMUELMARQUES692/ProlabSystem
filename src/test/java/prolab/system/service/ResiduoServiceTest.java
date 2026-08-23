@@ -16,12 +16,14 @@ import prolab.system.repository.PosicaoEstoqueRepository;
 import prolab.system.repository.RecebimentoRepository;
 import prolab.system.repository.ResiduoRepository;
 import prolab.system.request.ResiduoRequest;
+import prolab.system.response.ResiduoResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static ch.qos.logback.classic.spi.ThrowableProxyVO.build;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -339,5 +341,46 @@ class ResiduoServiceTest {
         Mockito.verify(posicaoEstoqueRepository).findById(posicaoEstoque.getId());
         Mockito.verify(residuoRepository).somarPesoPorPosicao(posicaoEstoque.getId());
         assertEquals(BigDecimal.valueOf(5), total);
+    }
+
+    @Test
+    void buscarTodos() {
+        Palete palete = Palete.builder()
+                .id(1L)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .build();
+
+
+        Residuo residuo = Residuo.builder()
+                .id(1L)
+                .palete(Palete.builder().id(1L).build())
+                .posicaoEstoque(PosicaoEstoque.builder().id(1L).build())
+                .status(StatusResiduo.ARMAZENADO)
+                .mtrVinculado("MTR Teste")
+                .dataDestinacao(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        ResiduoResponse response = ResiduoResponse.builder()
+                .id(residuo.getId())
+                .paleteId(palete.getId())
+                .ticket("Ticket Teste")
+                .prime("Prime Teste")
+                .tipo(palete.getTipo())
+                .peso(BigDecimal.TEN)
+                .posicaoId(1L)
+                .status(StatusResiduo.ARMAZENADO)
+                .mtrVinculado("MTR Teste")
+                .dataDestinacao(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(residuoRepository.findAllComPaleteRecebimento()).thenReturn(List.of(residuo));
+        Mockito.when(residuoMapper.toResiduoResponse(residuo)).thenReturn(response);
+
+        residuoService.buscarTodos();
+
+        Mockito.verify(residuoRepository).findAllComPaleteRecebimento();
+        Mockito.verify(residuoMapper).toResiduoResponse(residuo);
     }
 }
