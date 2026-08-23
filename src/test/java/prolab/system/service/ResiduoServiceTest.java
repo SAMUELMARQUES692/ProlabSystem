@@ -305,12 +305,12 @@ class ResiduoServiceTest {
                 .build();
 
         Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.findByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(Optional.of(residuo));
+        Mockito.when(residuoRepository.findAtivoByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(Optional.of(residuo));
 
         residuoService.buscarPorPosicaoId(posicaoEstoque.getId());
 
         Mockito.verify(posicaoEstoqueRepository).findById(posicaoEstoque.getId());
-        Mockito.verify(residuoRepository).findByPosicaoEstoqueId(posicaoEstoque.getId());
+        Mockito.verify(residuoRepository).findAtivoByPosicaoEstoqueId(posicaoEstoque.getId());
         Mockito.verify(residuoMapper).toResiduoResponse(residuo);
     }
 

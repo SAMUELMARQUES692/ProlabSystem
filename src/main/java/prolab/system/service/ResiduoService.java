@@ -130,7 +130,7 @@ public class ResiduoService {
         posicaoEstoqueRepository.findById(posicaoId)
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId));
 
-        Residuo residuo = residuoRepository.findByPosicaoEstoqueId(posicaoId)
+        Residuo residuo = residuoRepository.findAtivoByPosicaoEstoqueId(posicaoId)
                 .orElseThrow(() -> new ResiduoNotFoundException("Residuo não encontrado nesta posição ID: " + posicaoId));
 
         return residuoMapper.toResiduoResponse(residuo);

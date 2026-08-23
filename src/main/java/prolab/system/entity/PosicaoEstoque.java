@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = "residuos")
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -43,6 +43,4 @@ public class PosicaoEstoque {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "posicaoEstoque", fetch = FetchType.LAZY)
-    private Residuo residuo;
 }
