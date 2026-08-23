@@ -56,7 +56,7 @@ public class ResiduoController implements ResiduoControllerDoc {
     }
 
     @GetMapping("{posicaoId}/posicao")
-    public ResponseEntity<List<ResiduoResponse>> buscarResiduoPorPosicao(@PathVariable Long posicaoId) {
+    public ResponseEntity<ResiduoResponse> buscarPorPosicaoId(@PathVariable Long posicaoId) {
         return ResponseEntity.ok(residuoService.buscarPorPosicaoId(posicaoId));
     }
 

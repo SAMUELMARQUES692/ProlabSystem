@@ -7,8 +7,8 @@ import prolab.system.entity.Residuo;
 import prolab.system.enums.StatusResiduo;
 import prolab.system.enums.TipoResiduo;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface ResiduoRepository extends JpaRepository<Residuo, Long> {
 
@@ -19,19 +19,18 @@ public interface ResiduoRepository extends JpaRepository<Residuo, Long> {
     List<Residuo> findByPaleteTipo(@Param("tipo")TipoResiduo tipo);
 
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.posicaoEstoque.id = :posicaoId")
-    List<Residuo> findByPosicaoEstoqueId(@Param("posicaoId")Long posicaoId);
+    Optional<Residuo> findByPosicaoEstoqueId(@Param("posicaoId")Long posicaoId);
 
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.posicaoEstoque.codigo = :codigo")
     List<Residuo> findByPosicaoEstoqueCodigo(@Param("codigo")String codigo);
-
-    @Query("SELECT COALESCE(SUM(r.palete.peso), 0) FROM Residuo r WHERE r.posicaoEstoque.id = :posicaoId")
-    BigDecimal somarPesoPorPosicao(@Param("posicaoId") Long posicaoId);
 
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.status = :status")
     List<Residuo> findByStatusComPaleteRecebimento(@Param("status") StatusResiduo status);
 
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento JOIN FETCH r.posicaoEstoque")
     List<Residuo> findAllComPaleteRecebimento();
+
+    boolean existsByPosicaoEstoqueId(Long posicaoId);
 
 
 }

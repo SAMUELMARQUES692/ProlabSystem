@@ -612,7 +612,7 @@ class ResiduoControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void buscarResiduoPorPosicao() throws Exception {
+    void buscarPorPosicaoId() throws Exception {
         Cliente cliente = clienteRepository.save(
                 Cliente.builder()
                         .razaoSocial("Cliente Teste")
@@ -701,15 +701,13 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                 .build();
 
         mockMvc.perform(get("/api/residuos/{posicaoId}/posicao", residuo.getPosicaoEstoque().getId())
-                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(response)))
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN"))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(response.id()))
-                .andExpect(jsonPath("$[0].paleteId").value(response.paleteId()))
-                .andExpect(jsonPath("$[0].posicaoId").value(response.posicaoId()))
-                .andExpect(jsonPath("$[0].status").value(response.status().name()))
-                .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));
+                .andExpect(jsonPath("$.id").value(residuo.getId()))
+                .andExpect(jsonPath("$.paleteId").value(palete.getId()))
+                .andExpect(jsonPath("$.posicaoId").value(posicaoEstoque.getId()))
+                .andExpect(jsonPath("$.status").value(residuo.getStatus().name()))
+                .andExpect(jsonPath("$.mtrVinculado").value(residuo.getMtrVinculado()));
     }
 
     @Test
