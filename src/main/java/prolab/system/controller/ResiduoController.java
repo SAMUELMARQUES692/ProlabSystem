@@ -70,6 +70,11 @@ public class ResiduoController implements ResiduoControllerDoc {
         return ResponseEntity.ok(residuoService.buscarPorCodigoPosicao(codigo));
     }
 
+    @GetMapping
+    public ResponseEntity<List<ResiduoResponse>> buscarTodos() {
+        return ResponseEntity.ok(residuoService.buscarTodos());
+    }
+
 
 
 }

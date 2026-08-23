@@ -918,4 +918,114 @@ class ResiduoControllerTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$[0].status").value(response.status().name()))
                 .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));
     }
+
+    @Test
+    void buscarTodos() throws Exception {
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Caminhao caminhao = caminhaoRepository.save(
+                Caminhao.builder()
+                        .placa("ABC1234")
+                        .modelo("Modelo Teste")
+                        .motorista("Motorista Teste")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Recebimento recebimento = recebimentoRepository.save(
+                Recebimento.builder()
+                        .agendamento(agendamento)
+                        .cliente(cliente)
+                        .caminhao(caminhao)
+                        .prime("Prime Test")
+                        .dataHoraRecebimento(LocalDateTime.now())
+                        .pesoConferido(BigDecimal.TEN)
+                        .observacoes("Observação Test")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        PosicaoEstoque posicaoEstoque = posicaoEstoqueRepository.save(
+                PosicaoEstoque.builder()
+                        .codigo("Codigo Teste")
+                        .capacidade(BigDecimal.TEN)
+                        .status(StatusPosicao.DISPONIVEL)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(2)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.LIQUIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Residuo residuo = residuoRepository.save(
+                Residuo.builder()
+                        .posicaoEstoque(posicaoEstoque)
+                        .palete(palete)
+                        .status(StatusResiduo.ARMAZENADO)
+                        .mtrVinculado("MTR Teste")
+                        .dataDestinacao(LocalDateTime.now())
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        ResiduoResponse response = ResiduoResponse.builder()
+                .id(residuo.getId())
+                .paleteId(palete.getId())
+                .ticket(palete.getTicket())
+                .prime(recebimento.getPrime())
+                .tipo(palete.getTipo())
+                .peso(palete.getPeso())
+                .posicaoId(posicaoEstoque.getId())
+                .status(residuo.getStatus())
+                .mtrVinculado("MTR Teste")
+                .dataDestinacao(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        mockMvc.perform(get("/api/residuos")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(response)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(response.id()))
+                .andExpect(jsonPath("$[0].paleteId").value(response.paleteId()))
+                .andExpect(jsonPath("$[0].ticket").value(response.ticket()))
+                .andExpect(jsonPath("$[0].prime").value(response.prime()))
+                .andExpect(jsonPath("$[0].tipo").value(response.tipo().name()))
+                .andExpect(jsonPath("$[0].peso").value(response.peso()))
+                .andExpect(jsonPath("$[0].posicaoId").value(response.posicaoId()))
+                .andExpect(jsonPath("$[0].status").value(response.status().name()))
+                .andExpect(jsonPath("$[0].mtrVinculado").value(response.mtrVinculado()));
+
+    }
 }

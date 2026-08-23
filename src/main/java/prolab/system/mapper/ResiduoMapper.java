@@ -22,6 +22,8 @@ public interface ResiduoMapper {
     @Mapping(target = "posicaoId", source = "posicaoEstoque.id")
     @Mapping(target = "ticket", source = "palete.ticket")
     @Mapping(target = "prime", source = "palete.recebimento.prime")
+    @Mapping(target = "tipo", source = "palete.tipo")
+    @Mapping(target = "peso", source = "palete.peso")
     ResiduoResponse toResiduoResponse(Residuo residuo);
 
     @Mapping(target = "id", ignore = true)

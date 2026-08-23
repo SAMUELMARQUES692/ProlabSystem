@@ -153,6 +153,13 @@ public class ResiduoService {
         return residuoRepository.somarPesoPorPosicao(posicaoId);
     }
 
+    @Transactional(readOnly = true)
+    public List<ResiduoResponse> buscarTodos() {
+        return residuoRepository.findAllComPaleteRecebimento().stream()
+                .map(residuoMapper::toResiduoResponse)
+                .toList();
+    }
+
 
 
 }
