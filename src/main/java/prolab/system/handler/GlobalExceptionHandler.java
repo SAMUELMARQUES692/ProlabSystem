@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PrimeNotFoundException.class)
-    public ResponseEntity<ErrorResponse> documentoNotFound(PrimeNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> primeNotFound(PrimeNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(
                 "PRIME_NAO_ENCONTRADO",
                 exception.getMessage(),
@@ -122,6 +122,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> clienteConflict(ClienteDuplicadoException exception) {
         ErrorResponse error = new ErrorResponse(
                 "CLIENTE_JA_CADASTRADA",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(PosicaoJaOcupadaException.class)
+    public ResponseEntity<ErrorResponse> posicaoConflict(PosicaoJaOcupadaException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "POSICAO_JA_OCUPADA",
                 exception.getMessage(),
                 LocalDateTime.now()
         );

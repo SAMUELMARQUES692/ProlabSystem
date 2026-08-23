@@ -24,8 +24,8 @@ public class Residuo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posicao_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "posicao_id", nullable = false, unique = true)
     private PosicaoEstoque posicaoEstoque;
 
     @OneToOne(fetch = FetchType.LAZY)

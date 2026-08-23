@@ -62,7 +62,7 @@ public interface ResiduoControllerDoc {
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "200", description = "Residuo encontrado com sucesso", content = @Content(schema = @Schema(implementation = ResiduoResponse.class)))
     @ApiResponse(responseCode = "404", description = "Residuo não encontrado", content = @Content())
-    ResponseEntity<List<ResiduoResponse>> buscarResiduoPorPosicao(@PathVariable Long posicaoId);
+    ResponseEntity<ResiduoResponse> buscarPorPosicaoId(@PathVariable Long posicaoId);
 
 
     @Operation(summary = "Busca os Residuos pelo status", description = "Metodo responsavel por buscar residuos usando o status do residuo",

@@ -1,0 +1,1 @@
+ALTER TABLE residuos ADD CONSTRAINT uq_residuos_posicao_id UNIQUE (posicao_id);

@@ -9,6 +9,8 @@ import prolab.system.enums.EstadoFisico;
 import prolab.system.enums.StatusPosicao;
 import prolab.system.enums.StatusResiduo;
 import prolab.system.enums.TipoResiduo;
+import prolab.system.exception.CapacidadeExcedidaException;
+import prolab.system.exception.PosicaoJaOcupadaException;
 import prolab.system.exception.TransicaoStatusInvalidaException;
 import prolab.system.mapper.ResiduoMapper;
 import prolab.system.repository.PaleteRepository;
@@ -99,7 +101,7 @@ class ResiduoServiceTest {
 
         Mockito.when(paleteRepository.findById(request.paleteId())).thenReturn(Optional.of(palete));
         Mockito.when(posicaoEstoqueRepository.findById(request.posicaoId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.somarPesoPorPosicao(request.posicaoId())).thenReturn(BigDecimal.ONE); // ou qualquer valor que faça sentido pro cenário
+        Mockito.when(residuoRepository.existsByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(false);
         Mockito.when(residuoMapper.toResiduo(request)).thenReturn(residuo);
         Mockito.when(residuoRepository.save(residuo)).thenReturn(residuo);
 
@@ -107,10 +109,49 @@ class ResiduoServiceTest {
 
         Mockito.verify(paleteRepository).findById(request.paleteId());
         Mockito.verify(posicaoEstoqueRepository).findById(request.posicaoId());
-        Mockito.verify(residuoRepository).somarPesoPorPosicao(request.posicaoId());
+        Mockito.verify(residuoRepository).existsByPosicaoEstoqueId(posicaoEstoque.getId());
         Mockito.verify(residuoMapper).toResiduo(request);
         Mockito.verify(residuoRepository).save(argumentCaptor.capture());
         Mockito.verify(residuoMapper).toResiduoResponse(Mockito.any());
+    }
+
+    @Test
+    void cadastrarPosicaoJaOcupadaDeveLancarExcecao() {
+        ResiduoRequest request = ResiduoRequest.builder()
+                .paleteId(1L)
+                .posicaoId(1L)
+                .mtrVinculado("MTR Teste")
+                .build();
+
+        Palete palete = Palete.builder().id(1L).peso(BigDecimal.ONE).build();
+        PosicaoEstoque posicaoEstoque = PosicaoEstoque.builder().id(1L).capacidade(BigDecimal.TEN).build();
+
+        Mockito.when(paleteRepository.findById(request.paleteId())).thenReturn(Optional.of(palete));
+        Mockito.when(posicaoEstoqueRepository.findById(request.posicaoId())).thenReturn(Optional.of(posicaoEstoque));
+        Mockito.when(residuoRepository.existsByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(true);
+
+        assertThrows(PosicaoJaOcupadaException.class, () -> residuoService.cadastrar(request));
+
+        Mockito.verify(residuoRepository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void cadastrarCapacidadeExcedidaDeveLancarExcecao() {
+        ResiduoRequest request = ResiduoRequest.builder()
+                .paleteId(1L)
+                .posicaoId(1L)
+                .mtrVinculado("MTR Teste")
+                .build();
+
+        Palete palete = Palete.builder().id(1L).peso(BigDecimal.valueOf(50)).build();
+        PosicaoEstoque posicaoEstoque = PosicaoEstoque.builder().id(1L).capacidade(BigDecimal.TEN).build();
+
+        Mockito.when(paleteRepository.findById(request.paleteId())).thenReturn(Optional.of(palete));
+        Mockito.when(posicaoEstoqueRepository.findById(request.posicaoId())).thenReturn(Optional.of(posicaoEstoque));
+
+        assertThrows(CapacidadeExcedidaException.class, () -> residuoService.cadastrar(request));
+
+        Mockito.verify(residuoRepository, Mockito.never()).save(Mockito.any());
     }
 
     @Test
@@ -203,7 +244,7 @@ class ResiduoServiceTest {
     }
 
     @Test
-    void avancarStatus_transicaoInvalida_deveLancarExcecao() {
+    void avancarStatusTransicaoInvalidaDeveLancarExcecao() {
         Residuo residuo = Residuo.builder()
                 .id(1L)
                 .status(StatusResiduo.ARMAZENADO)
@@ -264,7 +305,7 @@ class ResiduoServiceTest {
                 .build();
 
         Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.findByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(List.of(residuo));
+        Mockito.when(residuoRepository.findByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(Optional.of(residuo));
 
         residuoService.buscarPorPosicaoId(posicaoEstoque.getId());
 
@@ -321,26 +362,6 @@ class ResiduoServiceTest {
 
         Mockito.verify(residuoRepository).findByStatus(StatusResiduo.ARMAZENADO);
         Mockito.verify(residuoMapper).toResiduoResponse(residuo);
-    }
-
-    @Test
-    void calculoTotalPesoPorPosicao() {
-        PosicaoEstoque posicaoEstoque = PosicaoEstoque.builder()
-                .id(1L)
-                .codigo("Codigo Teste")
-                .capacidade(BigDecimal.TEN)
-                .status(StatusPosicao.OCUPADA)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        Mockito.when(posicaoEstoqueRepository.findById(posicaoEstoque.getId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.somarPesoPorPosicao(posicaoEstoque.getId())).thenReturn(BigDecimal.valueOf(5));
-
-        BigDecimal total = residuoService.calculoTotalPesoPorPosicao(posicaoEstoque.getId());
-
-        Mockito.verify(posicaoEstoqueRepository).findById(posicaoEstoque.getId());
-        Mockito.verify(residuoRepository).somarPesoPorPosicao(posicaoEstoque.getId());
-        assertEquals(BigDecimal.valueOf(5), total);
     }
 
     @Test

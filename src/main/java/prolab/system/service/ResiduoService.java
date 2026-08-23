@@ -40,14 +40,14 @@ public class ResiduoService {
         PosicaoEstoque posicao = posicaoEstoqueRepository.findById(request.posicaoId())
                 .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o ID: " + request.posicaoId()));
 
-        BigDecimal quantidadeAtual  = residuoRepository.somarPesoPorPosicao(request.posicaoId());
-        BigDecimal novaQuantidade = quantidadeAtual.add(palete.getPeso());
-
-        if (posicao.getCapacidade() != null && posicao.getCapacidade().compareTo(novaQuantidade) < 0) {
+        if (posicao.getCapacidade() != null && posicao.getCapacidade().compareTo(palete.getPeso()) < 0) {
             throw new CapacidadeExcedidaException(
-                    "Capacidade da posição excedida. Capacidade: " + posicao.getCapacidade() +
-                            ", quantidade após adicionar: " + novaQuantidade
+                    "Peso do palete (" + palete.getPeso() + ") excede a capacidade da posição (" + posicao.getCapacidade() + ")"
             );
+        }
+
+        if (residuoRepository.existsByPosicaoEstoqueId(request.posicaoId())) {
+            throw new PosicaoJaOcupadaException("Posição já está ocupada por outro resíduo");
         }
 
         Residuo residuo = residuoMapper.toResiduo(request);
@@ -119,13 +119,14 @@ public class ResiduoService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResiduoResponse> buscarPorPosicaoId(Long posicaoId) {
+    public ResiduoResponse buscarPorPosicaoId(Long posicaoId) {
         posicaoEstoqueRepository.findById(posicaoId)
-                .orElseThrow(() -> new PosicaoNotFoundException("Posição Não encontrada com o ID: " + posicaoId));
+                .orElseThrow(() -> new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId));
 
-       return residuoRepository.findByPosicaoEstoqueId(posicaoId).stream()
-               .map(residuoMapper::toResiduoResponse)
-               .toList();
+        Residuo residuo = residuoRepository.findByPosicaoEstoqueId(posicaoId)
+                .orElseThrow(() -> new ResiduoNotFoundException("Residuo não encontrado nesta posição ID: " + posicaoId));
+
+        return residuoMapper.toResiduoResponse(residuo);
     }
 
     @Transactional(readOnly = true)
@@ -143,14 +144,6 @@ public class ResiduoService {
         return residuoRepository.findByStatus(status).stream()
                 .map(residuoMapper::toResiduoResponse)
                 .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public BigDecimal calculoTotalPesoPorPosicao(Long posicaoId) {
-        if (posicaoEstoqueRepository.findById(posicaoId).isEmpty()) {
-            throw new PosicaoNotFoundException("Posição não encontrada com o ID: " + posicaoId);
-        }
-        return residuoRepository.somarPesoPorPosicao(posicaoId);
     }
 
     @Transactional(readOnly = true)

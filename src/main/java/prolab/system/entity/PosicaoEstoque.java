@@ -43,6 +43,6 @@ public class PosicaoEstoque {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "posicaoEstoque")
-    private List<Residuo> residuos;
+    @OneToOne(mappedBy = "posicaoEstoque", fetch = FetchType.LAZY)
+    private Residuo residuo;
 }
