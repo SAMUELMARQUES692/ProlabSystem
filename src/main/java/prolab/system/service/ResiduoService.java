@@ -47,7 +47,7 @@ public class ResiduoService {
             );
         }
 
-        if (residuoRepository.existsByPosicaoEstoqueId(request.posicaoId())) {
+        if (residuoRepository.existsByPosicaoEstoqueIdAndStatusNot(request.posicaoId(), StatusResiduo.DESTRUIDO)) {
             throw new PosicaoJaOcupadaException("Posição já está ocupada por outro resíduo");
         }
 

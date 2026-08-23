@@ -25,7 +25,7 @@ public class Residuo {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posicao_id", nullable = false, unique = true)
+    @JoinColumn(name = "posicao_id", nullable = false)
     private PosicaoEstoque posicaoEstoque;
 
     @OneToOne(fetch = FetchType.LAZY)

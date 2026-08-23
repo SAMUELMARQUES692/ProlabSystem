@@ -101,7 +101,7 @@ class ResiduoServiceTest {
 
         Mockito.when(paleteRepository.findById(request.paleteId())).thenReturn(Optional.of(palete));
         Mockito.when(posicaoEstoqueRepository.findById(request.posicaoId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.existsByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(false);
+        Mockito.when(residuoRepository.existsByPosicaoEstoqueIdAndStatusNot(posicaoEstoque.getId(), StatusResiduo.DESTRUIDO)).thenReturn(false);
         Mockito.when(residuoMapper.toResiduo(request)).thenReturn(residuo);
         Mockito.when(residuoRepository.save(residuo)).thenReturn(residuo);
 
@@ -109,7 +109,7 @@ class ResiduoServiceTest {
 
         Mockito.verify(paleteRepository).findById(request.paleteId());
         Mockito.verify(posicaoEstoqueRepository).findById(request.posicaoId());
-        Mockito.verify(residuoRepository).existsByPosicaoEstoqueId(posicaoEstoque.getId());
+        Mockito.verify(residuoRepository).existsByPosicaoEstoqueIdAndStatusNot(posicaoEstoque.getId(), StatusResiduo.DESTRUIDO);
         Mockito.verify(residuoMapper).toResiduo(request);
         Mockito.verify(residuoRepository).save(argumentCaptor.capture());
         Mockito.verify(residuoMapper).toResiduoResponse(Mockito.any());
@@ -128,7 +128,7 @@ class ResiduoServiceTest {
 
         Mockito.when(paleteRepository.findById(request.paleteId())).thenReturn(Optional.of(palete));
         Mockito.when(posicaoEstoqueRepository.findById(request.posicaoId())).thenReturn(Optional.of(posicaoEstoque));
-        Mockito.when(residuoRepository.existsByPosicaoEstoqueId(posicaoEstoque.getId())).thenReturn(true);
+        Mockito.when(residuoRepository.existsByPosicaoEstoqueIdAndStatusNot(posicaoEstoque.getId(), StatusResiduo.DESTRUIDO)).thenReturn(true);
 
         assertThrows(PosicaoJaOcupadaException.class, () -> residuoService.cadastrar(request));
 
