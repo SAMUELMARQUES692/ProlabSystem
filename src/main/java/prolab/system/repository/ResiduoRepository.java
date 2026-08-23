@@ -18,8 +18,8 @@ public interface ResiduoRepository extends JpaRepository<Residuo, Long> {
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE p.tipo = :tipo")
     List<Residuo> findByPaleteTipo(@Param("tipo")TipoResiduo tipo);
 
-    @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.posicaoEstoque.id = :posicaoId")
-    Optional<Residuo> findByPosicaoEstoqueId(@Param("posicaoId")Long posicaoId);
+    @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.posicaoEstoque.id = :posicaoId AND r.status <> 'DESTRUIDO'")
+    Optional<Residuo> findAtivoByPosicaoEstoqueId(@Param("posicaoId") Long posicaoId);
 
     @Query("SELECT r FROM Residuo r JOIN FETCH r.palete p JOIN FETCH p.recebimento WHERE r.posicaoEstoque.codigo = :codigo")
     List<Residuo> findByPosicaoEstoqueCodigo(@Param("codigo")String codigo);
