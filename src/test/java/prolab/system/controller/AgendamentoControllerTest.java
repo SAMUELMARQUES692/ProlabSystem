@@ -15,6 +15,7 @@ import prolab.system.enums.TipoDeDestruicao;
 import prolab.system.repository.AgendamentoRepository;
 import prolab.system.repository.ClienteRepository;
 import prolab.system.request.AgendamentoRequest;
+import prolab.system.request.AtualizarAgendamentoRequest;
 
 import java.time.LocalDateTime;
 
@@ -144,7 +145,7 @@ class AgendamentoControllerTest extends BaseIntegrationTest {
 
         mockMvc.perform(delete("/api/agendamentos/{id}", agendamento.getId())
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
-                        .contentType( MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(agendamento)))
                 .andExpect(status().isNoContent());
     }
@@ -256,4 +257,42 @@ class AgendamentoControllerTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$[0].quantidadePaletes").value(agendamento.getQuantidadePaletes()))
                 .andExpect(jsonPath("$[0].status").value(agendamento.getStatus().name()));
     }
+
+    @Test
+    void atualizarAgendamento() throws Exception {
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        AtualizarAgendamentoRequest request = AtualizarAgendamentoRequest.builder()
+                .novoAgendamento(agendamento.getStatus())
+                .build();
+
+        mockMvc.perform(put("/api/agendamentos/atualizar-agendamento/{id}", agendamento.getId())
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
+                .contentType( MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(agendamento.getId()));
+    }
+
 }

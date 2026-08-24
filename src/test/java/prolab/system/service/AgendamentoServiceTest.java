@@ -12,6 +12,7 @@ import prolab.system.mapper.AgendamentoMapper;
 import prolab.system.repository.AgendamentoRepository;
 import prolab.system.repository.ClienteRepository;
 import prolab.system.request.AgendamentoRequest;
+import prolab.system.request.AtualizarAgendamentoRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -218,5 +219,31 @@ class AgendamentoServiceTest {
 
         Mockito.verify(agendamentoRepository).findByTipoDeDestruicao(agendamento.getTipoDeDestruicao());
         Mockito.verify(agendamentoMapper).toAgendamentoResponse(Mockito.any());
+    }
+
+    @Test
+    void atualizarAgendamento() {
+        Agendamento agendamento = Agendamento.builder()
+                .id(1L)
+                .tipoResiduo("Residuo Teste")
+                .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                .quantidadePaletes(10)
+                .dataHoraPrevista(LocalDateTime.now())
+                .status(StatusAgendamento.AGENDADO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        AtualizarAgendamentoRequest request = AtualizarAgendamentoRequest.builder()
+                .novoAgendamento(StatusAgendamento.CONFIRMADO)
+                .build();
+
+        Mockito.when(agendamentoRepository.findById(agendamento.getId())).thenReturn(Optional.of(agendamento));
+        Mockito.when(agendamentoRepository.save(agendamento)).thenReturn(agendamento);
+
+        agendamentoService.atualizarAgendamento(agendamento.getId(), request);
+
+        Mockito.verify(agendamentoRepository).findById(agendamento.getId());
+        Mockito.verify(agendamentoRepository).save(agendamento);
+        Mockito.verify(agendamentoMapper).toAgendamentoResponse(agendamento);
     }
 }
