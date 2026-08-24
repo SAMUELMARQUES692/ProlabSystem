@@ -8,6 +8,7 @@ import prolab.system.documentation.AgendamentoControllerDoc;
 import prolab.system.enums.StatusAgendamento;
 import prolab.system.enums.TipoDeDestruicao;
 import prolab.system.request.AgendamentoRequest;
+import prolab.system.request.AtualizarAgendamentoRequest;
 import prolab.system.response.AgendamentoResponse;
 import prolab.system.service.AgendamentoService;
 
@@ -54,10 +55,8 @@ public class AgendamentoController implements AgendamentoControllerDoc {
         return ResponseEntity.ok(agendamentoService.buscarPorTipoDeDestruicao(tipo));
     }
 
-
-
-
-
-
-
+    @PutMapping("atualizar-agendamento/{id}")
+    public ResponseEntity<AgendamentoResponse> atualizarAgendamento(@PathVariable Long id, @RequestBody @Valid AtualizarAgendamentoRequest request) {
+        return ResponseEntity.ok(agendamentoService.atualizarAgendamento(id, request));
+    }
 }

@@ -13,6 +13,7 @@ import prolab.system.mapper.AgendamentoMapper;
 import prolab.system.repository.AgendamentoRepository;
 import prolab.system.repository.ClienteRepository;
 import prolab.system.request.AgendamentoRequest;
+import prolab.system.request.AtualizarAgendamentoRequest;
 import prolab.system.response.AgendamentoResponse;
 
 import java.util.List;
@@ -73,6 +74,12 @@ public class AgendamentoService {
                 .toList();
     }
 
+    public AgendamentoResponse atualizarAgendamento(Long id, AtualizarAgendamentoRequest request) {
+       Agendamento agendamento = agendamentoRepository.findById(id)
+               .orElseThrow(() -> new AgendamentoNotFoundException("Agendamento não encontrado com o ID: " + id));
 
-
+       agendamento.setStatus(request.novoAgendamento());
+       Agendamento salvo = agendamentoRepository.save(agendamento);
+       return agendamentoMapper.toAgendamentoResponse(salvo);
+    }
 }
