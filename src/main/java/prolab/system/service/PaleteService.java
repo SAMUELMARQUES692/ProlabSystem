@@ -62,7 +62,7 @@ public class PaleteService {
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<PaleteResponse> buscarPorPrime(String prime) {
-      recebimentoRepository.existsByPrime(prime)
+      recebimentoRepository.findByPrime(prime)
                .orElseThrow(() -> new PrimeNotFoundException("Prime não encontrado"));
 
         return paleteRepository.findAllPaletesPrime(prime).stream()
