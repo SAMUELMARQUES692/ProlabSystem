@@ -7,6 +7,7 @@ import prolab.system.entity.Agendamento;
 import prolab.system.entity.Caminhao;
 import prolab.system.entity.Recebimento;
 import prolab.system.enums.StatusAgendamento;
+import prolab.system.exception.PrimeNotFoundException;
 import prolab.system.exception.RecebimentoDuplicadoException;
 import prolab.system.exception.AgendamentoNotFoundException;
 import prolab.system.exception.RecebimentoNotFoundException;
@@ -89,15 +90,16 @@ public class RecebimentoService {
         recebimentoRepository.deleteById(id);
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<RecebimentoResponse> buscarTodos() {
-        return recebimentoRepository.findAll().stream()
+        return recebimentoRepository.findAllComRelacionamentos().stream()
                 .map(recebimentoMapper::toRecebimentoResponse)
                 .toList();
     }
 
     public RecebimentoResponse buscarPorPrime(String prime) {
-        Recebimento recebimento = recebimentoRepository.existsByPrime(prime)
-                .orElseThrow(() -> new RuntimeException("Prime não encontrado"));
+        Recebimento recebimento = recebimentoRepository.findByPrime(prime)
+                .orElseThrow(() -> new PrimeNotFoundException("Prime não encontrado"));
         return recebimentoMapper.toRecebimentoResponse(recebimento);
     }
 

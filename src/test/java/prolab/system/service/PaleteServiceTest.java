@@ -161,13 +161,13 @@ class PaleteServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Mockito.when(recebimentoRepository.existsByPrime(recebimento.getPrime())).thenReturn(Optional.of(recebimento));
+        Mockito.when(recebimentoRepository.findByPrime(recebimento.getPrime())).thenReturn(Optional.of(recebimento));
         Mockito.when(paleteRepository.findAllPaletesPrime(recebimento.getPrime())).thenReturn(List.of(palete));
         Mockito.when(paleteMapper.toPaleteResponse(palete)).thenReturn(response);
 
         paleteService.buscarPorPrime(recebimento.getPrime());
 
-        Mockito.verify(recebimentoRepository).existsByPrime(recebimento.getPrime());
+        Mockito.verify(recebimentoRepository).findByPrime(recebimento.getPrime());
         Mockito.verify(paleteRepository).findAllPaletesPrime(recebimento.getPrime());
         Mockito.verify(paleteMapper).toPaleteResponse(palete);
     }

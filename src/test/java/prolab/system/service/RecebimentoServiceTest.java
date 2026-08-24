@@ -200,11 +200,11 @@ class RecebimentoServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Mockito.when(recebimentoRepository.existsByPrime(recebimento.getPrime())).thenReturn(Optional.of(recebimento));
+        Mockito.when(recebimentoRepository.findByPrime(recebimento.getPrime())).thenReturn(Optional.of(recebimento));
 
         recebimentoService.buscarPorPrime(recebimento.getPrime());
 
-        Mockito.verify(recebimentoRepository).existsByPrime(recebimento.getPrime());
+        Mockito.verify(recebimentoRepository).findByPrime(recebimento.getPrime());
         Mockito.verify(recebimentoMapper).toRecebimentoResponse(Mockito.any());
     }
 

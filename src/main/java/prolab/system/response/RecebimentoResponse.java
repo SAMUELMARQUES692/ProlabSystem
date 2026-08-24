@@ -1,6 +1,7 @@
 package prolab.system.response;
 
 import lombok.Builder;
+import prolab.system.enums.TipoDeDestruicao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ public record RecebimentoResponse(
         Long clienteId,
         Long caminhaoId,
         String prime,
+        TipoDeDestruicao tipoDeDestruicao,
         LocalDateTime dataHoraRecebimento,
         BigDecimal pesoConferido,
         String observacoes,

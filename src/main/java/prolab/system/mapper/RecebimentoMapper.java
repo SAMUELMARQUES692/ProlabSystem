@@ -24,6 +24,7 @@ public interface RecebimentoMapper {
     @Mapping(target = "agendamentoId", source = "agendamento.id")
     @Mapping(target = "clienteId", source = "cliente.id")
     @Mapping(target = "caminhaoId", source = "caminhao.id")
+    @Mapping(target = "tipoDeDestruicao", source = "agendamento.tipoDeDestruicao")
     RecebimentoResponse toRecebimentoResponse(Recebimento recebimento);
 
     @Mapping(target = "id", ignore = true)
