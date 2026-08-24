@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import prolab.system.entity.Agendamento;
 import prolab.system.entity.Caminhao;
 import prolab.system.entity.Recebimento;
+import prolab.system.enums.StatusAgendamento;
 import prolab.system.exception.RecebimentoDuplicadoException;
 import prolab.system.exception.AgendamentoNotFoundException;
 import prolab.system.exception.RecebimentoNotFoundException;
@@ -48,6 +49,9 @@ public class RecebimentoService {
         recebimento.setCliente(agendamento.getCliente());
         recebimento.setCaminhao(caminhao);
         recebimento.setPrime(gerarCodigoPrime());
+
+        agendamento.setStatus(StatusAgendamento.CONFIRMADO);
+        agendamentoRepository.save(agendamento);
 
         Recebimento salvo = recebimentoRepository.save(recebimento);
         return recebimentoMapper.toRecebimentoResponse(salvo);
