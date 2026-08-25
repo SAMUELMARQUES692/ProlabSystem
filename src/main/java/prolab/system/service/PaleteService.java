@@ -2,9 +2,11 @@ package prolab.system.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.flywaydb.database.postgresql.PostgreSQLAdvisoryLockTemplate;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.Palete;
 import prolab.system.entity.Recebimento;
+import prolab.system.exception.PaleteNotFoundException;
 import prolab.system.exception.PrimeNotFoundException;
 import prolab.system.exception.RecebimentoNotFoundException;
 import prolab.system.mapper.PaleteMapper;
@@ -47,6 +49,23 @@ public class PaleteService {
         return paleteMapper.toPaleteResponse(salvo);
     }
 
+    @Transactional
+    public PaleteResponse atualizar(Long id, PaleteRequest request) {
+        Palete palete = paleteRepository.findById(id)
+                .orElseThrow(() -> new PaleteNotFoundException("Palete não encontrado com o ID: " + id));
+
+        paleteMapper.atualizarPalete(request, palete);
+
+        Palete salvo = paleteRepository.save(palete);
+        return paleteMapper.toPaleteResponse(salvo);
+    }
+
+    public void deletar(Long id) {
+        paleteRepository.findById(id)
+                .orElseThrow(() -> new PaleteNotFoundException("Palete não encontrado com o ID: " + id));
+        paleteRepository.deleteById(id);
+    }
+
     private String gerarTicket() {
         int anoAtual = Year.now().getValue();
         Integer numero = controleSequecialTicketRepository.proximoNumero(anoAtual);
@@ -69,6 +88,4 @@ public class PaleteService {
                 .map(paleteMapper::toPaleteResponse)
                 .toList();
     }
-
-
 }
