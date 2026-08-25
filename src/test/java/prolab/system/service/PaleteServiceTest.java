@@ -97,6 +97,67 @@ class PaleteServiceTest {
     }
 
     @Test
+    void atualizar() {
+        Palete palete = Palete.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        PaleteRequest request = PaleteRequest.builder()
+                .recebimentoId(1L)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.TEN)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .build();
+
+        PaleteResponse response = PaleteResponse.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(paleteRepository.findById(palete.getId())).thenReturn(Optional.of(palete));
+        Mockito.when(paleteRepository.save(palete)).thenReturn(palete);
+        Mockito.when(paleteMapper.toPaleteResponse(palete)).thenReturn(response);
+
+        paleteService.atualizar(palete.getId(), request);
+
+        Mockito.verify(paleteRepository).findById(palete.getId());
+        Mockito.verify(paleteMapper).atualizarPalete(request, palete);
+        Mockito.verify(paleteRepository).save(argumentCaptor.capture());
+        Mockito.verify(paleteMapper).toPaleteResponse(palete);
+    }
+
+    @Test
+    void deletar() {
+        Palete palete = Palete.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.ONE)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(paleteRepository.findById(palete.getId())).thenReturn(Optional.of(palete));
+
+        paleteService.deletar(palete.getId());
+
+        Mockito.verify(paleteRepository).findById(palete.getId());
+        Mockito.verify(paleteRepository).deleteById(palete.getId());
+    }
+
+    @Test
     void buscarTodos() {
         Palete palete = Palete.builder()
                 .id(1L)
