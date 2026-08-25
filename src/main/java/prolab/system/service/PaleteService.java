@@ -2,17 +2,19 @@ package prolab.system.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.flywaydb.database.postgresql.PostgreSQLAdvisoryLockTemplate;
 import org.springframework.stereotype.Service;
 import prolab.system.entity.Palete;
+import prolab.system.entity.PosicaoEstoque;
 import prolab.system.entity.Recebimento;
+import prolab.system.entity.Residuo;
+import prolab.system.enums.StatusPosicao;
+import prolab.system.enums.StatusResiduo;
 import prolab.system.exception.PaleteNotFoundException;
 import prolab.system.exception.PrimeNotFoundException;
 import prolab.system.exception.RecebimentoNotFoundException;
+import prolab.system.exception.ResiduoNotFoundException;
 import prolab.system.mapper.PaleteMapper;
-import prolab.system.repository.ControleSequecialTicketRepository;
-import prolab.system.repository.PaleteRepository;
-import prolab.system.repository.RecebimentoRepository;
+import prolab.system.repository.*;
 import prolab.system.request.PaleteRequest;
 import prolab.system.response.PaleteResponse;
 
@@ -26,6 +28,8 @@ public class PaleteService {
     private final RecebimentoRepository recebimentoRepository;
     private final ControleSequecialTicketRepository controleSequecialTicketRepository;
     private final PaleteRepository paleteRepository;
+    private final PosicaoEstoqueRepository posicaoEstoqueRepository;
+    private final ResiduoRepository residuoRepository;
     private final PaleteMapper paleteMapper;
 
     @Transactional
@@ -60,10 +64,25 @@ public class PaleteService {
         return paleteMapper.toPaleteResponse(salvo);
     }
 
+    @Transactional
     public void deletar(Long id) {
-        paleteRepository.findById(id)
+        Palete palete = paleteRepository.findById(id)
                 .orElseThrow(() -> new PaleteNotFoundException("Palete não encontrado com o ID: " + id));
-        paleteRepository.deleteById(id);
+
+        Residuo residuo = palete.getResiduo();
+        if (residuo != null) {
+            if (residuo.getStatus() != StatusResiduo.DESTRUIDO) {
+                PosicaoEstoque posicao = residuo.getPosicaoEstoque();
+                posicao.setStatus(StatusPosicao.DISPONIVEL);
+                posicaoEstoqueRepository.save(posicao);
+            }
+            residuoRepository.delete(residuo);
+        }
+        Recebimento recebimento = palete.getRecebimento();
+        recebimento.setPesoConferido(recebimento.getPesoConferido().subtract(palete.getPeso()));
+        recebimentoRepository.save(recebimento);
+
+        paleteRepository.delete(palete);
     }
 
     private String gerarTicket() {
