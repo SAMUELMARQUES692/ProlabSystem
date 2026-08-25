@@ -25,6 +25,17 @@ public class PaleteController {
         return ResponseEntity.created(location).body(response);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<PaleteResponse> atualizar(@PathVariable Long id, @RequestBody @Valid PaleteRequest request) {
+        return ResponseEntity.ok(paleteService.atualizar(id, request));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        paleteService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<PaleteResponse>> buscartodos() {
         return ResponseEntity.ok(paleteService.buscarTodos());
