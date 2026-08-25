@@ -9,10 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import prolab.system.configuration.BaseIntegrationTest;
 import prolab.system.entity.*;
-import prolab.system.enums.EstadoFisico;
-import prolab.system.enums.StatusAgendamento;
-import prolab.system.enums.TipoDeDestruicao;
-import prolab.system.enums.TipoResiduo;
+import prolab.system.enums.*;
 import prolab.system.repository.*;
 import prolab.system.request.PaleteRequest;
 import prolab.system.response.PaleteResponse;
@@ -22,8 +19,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +39,7 @@ class PaleteControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private PaleteRepository paleteRepository;
+
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -111,6 +108,163 @@ class PaleteControllerTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.tipo").value(request.tipo().name()))
                 .andExpect(jsonPath("$.peso").value(request.peso()))
                 .andExpect(jsonPath("$.estadoFisico").value(request.estadoFisico().name()));
+    }
+
+    @Test
+    void atualizar() throws Exception {
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Caminhao caminhao = caminhaoRepository.save(
+                Caminhao.builder()
+                        .placa("ABC1234")
+                        .modelo("Modelo Teste")
+                        .motorista("Motorista Teste")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Recebimento recebimento = recebimentoRepository.save(
+                Recebimento.builder()
+                        .agendamento(agendamento)
+                        .cliente(cliente)
+                        .caminhao(caminhao)
+                        .prime("Prime Test")
+                        .dataHoraRecebimento(LocalDateTime.now())
+                        .pesoConferido(BigDecimal.TEN)
+                        .observacoes("Observação Test")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(3)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.SOLIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        PaleteRequest request = PaleteRequest.builder()
+                .recebimentoId(recebimento.getId())
+                .tipo(TipoResiduo.CODIGO_15_02_02)
+                .peso(BigDecimal.TEN)
+                .estadoFisico(EstadoFisico.SOLIDO)
+                .build();
+
+        PaleteResponse response = PaleteResponse.builder()
+                .id(1L)
+                .ticket("Ticket Teste")
+                .numeroPalete(3)
+                .tipo(request.tipo())
+                .peso(request.peso())
+                .estadoFisico(request.estadoFisico())
+                .recebimentoId(recebimento.getId())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        mockMvc.perform(put("/api/paletes/{id}", palete.getId())
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(response)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(palete.getId()))
+                .andExpect(jsonPath("$.ticket").value(response.ticket()))
+                .andExpect(jsonPath("$.numeroPalete").value(response.numeroPalete()))
+                .andExpect(jsonPath("$.recebimentoId").value(request.recebimentoId()))
+                .andExpect(jsonPath("$.tipo").value(request.tipo().name()))
+                .andExpect(jsonPath("$.peso").value(request.peso()))
+                .andExpect(jsonPath("$.estadoFisico").value(request.estadoFisico().name()));
+    }
+
+    @Test
+    void deletar() throws Exception {
+        Cliente cliente = clienteRepository.save(
+                Cliente.builder()
+                        .razaoSocial("Cliente Teste")
+                        .cnpj("12345678910123")
+                        .contato("Contato Teste")
+                        .endereco("Endereco Teste")
+                        .ativo(true)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Agendamento agendamento = agendamentoRepository.save(
+                Agendamento.builder()
+                        .cliente(cliente)
+                        .tipoResiduo("Residuo Teste")
+                        .tipoDeDestruicao(TipoDeDestruicao.DESTRUICAO_DIRETA)
+                        .quantidadePaletes(10)
+                        .dataHoraPrevista(LocalDateTime.now())
+                        .status(StatusAgendamento.AGENDADO)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Caminhao caminhao = caminhaoRepository.save(
+                Caminhao.builder()
+                        .placa("ABC1234")
+                        .modelo("Modelo Teste")
+                        .motorista("Motorista Teste")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Recebimento recebimento = recebimentoRepository.save(
+                Recebimento.builder()
+                        .agendamento(agendamento)
+                        .cliente(cliente)
+                        .caminhao(caminhao)
+                        .prime("Prime Test")
+                        .dataHoraRecebimento(LocalDateTime.now())
+                        .pesoConferido(BigDecimal.TEN)
+                        .observacoes("Observação Test")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Palete palete = paleteRepository.save(
+                Palete.builder()
+                        .ticket("Ticket Teste")
+                        .numeroPalete(3)
+                        .tipo(TipoResiduo.CODIGO_15_02_02)
+                        .peso(BigDecimal.ONE)
+                        .estadoFisico(EstadoFisico.SOLIDO)
+                        .recebimento(recebimento)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        mockMvc.perform(delete("/api/paletes/{id}", palete.getId())
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ADMIN")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(palete)))
+                .andExpect(status().isNoContent());
     }
 
     @Test
